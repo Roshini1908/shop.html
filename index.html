@@ -1256,12 +1256,59 @@ button{
 .payment-icon{
     width:55px;
     height:55px;
+    min-width:55px;
     border-radius:9px;
     display:grid;
     place-items:center;
+    overflow:hidden;
     background:linear-gradient(135deg,#171c48,#062b40);
     font-size:28px;
 }
+
+/* Checkout uses the exact same Shop artwork without changing the Shop cards. */
+.payment-icon.checkout-product-icon{
+    width:55px;
+    height:55px;
+    min-width:55px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    border-radius:9px;
+    background:linear-gradient(135deg,#171c48,#062b40);
+}
+
+.payment-icon.checkout-product-icon .brand-art{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:150px;
+    height:92px;
+    margin:0;
+    transform:translate(-50%,-50%) scale(.36);
+    transform-origin:center center;
+    flex:0 0 auto;
+    pointer-events:none;
+    filter:drop-shadow(0 0 10px rgba(0,217,255,.28));
+}
+
+.payment-icon.checkout-product-icon .brand-word{
+    font-size:18px;
+}
+.payment-icon.checkout-product-icon .coin-stack{transform:scale(.82);}
+.payment-icon.checkout-product-icon .diamond-stack{transform:scale(.72);margin-top:2px;}
+.payment-icon.checkout-product-icon .valorant-v{transform:scale(.8);}
+.payment-icon.checkout-product-icon .play-triangle,
+.payment-icon.checkout-product-icon .steam-symbol,
+.payment-icon.checkout-product-icon .pass-x,
+.payment-icon.checkout-product-icon .cyber-chip,
+.payment-icon.checkout-product-icon .minecraft-cube,
+.payment-icon.checkout-product-icon .roblox-box,
+.payment-icon.checkout-product-icon .fc-ball,
+.payment-icon.checkout-product-icon .netflix-n{transform:scale(.75);}
+.payment-icon.checkout-product-icon strong,
+.payment-icon.checkout-product-icon small{white-space:nowrap;}
 
 .payment-product strong{
     font-size:13px;
@@ -2835,7 +2882,7 @@ async function loadOrdersFromSupabase() {
     }
     const { data, error } = await tournyxSupabase
         .from("orders")
-        .select("id,quantity,amount,status,created_at,region_id,product_id,products(title,game,icon),transactions(payment_method,payment_id,status)")
+        .select("id,quantity,amount,status,created_at,region_id,product_id,game_uid,products(title,game,icon),transactions(payment_method,payment_id,status)")
         .eq("user_id", authUser.id)
         .order("created_at", { ascending: false });
     if (error) { console.error("Order API:", error); return; }
@@ -3026,6 +3073,31 @@ function calculateSavings(market,price){
 /* =========================================================
    PRODUCT ICON ARTWORK
 ========================================================= */
+
+function getProductIconKey(product){
+    const raw = String(product?.icon || "").trim().toLowerCase();
+    const known = ["bgmi","freefire","valorant","googleplay","netflix","steam","roblox","cyberpunk","minecraft","eafc","gamepass"];
+    if(known.includes(raw)) return raw;
+
+    const text = `${product?.name || ""} ${product?.sub || ""} ${product?.game || ""} ${product?.category || ""}`.toLowerCase();
+    if(text.includes("free fire") || text.includes("freefire")) return "freefire";
+    if(text.includes("bgmi") || text.includes("pubg") || text.includes("uc")) return "bgmi";
+    if(text.includes("valorant") || text.includes("valorant points") || text.includes(" vp")) return "valorant";
+    if(text.includes("google play")) return "googleplay";
+    if(text.includes("netflix")) return "netflix";
+    if(text.includes("steam")) return "steam";
+    if(text.includes("roblox")) return "roblox";
+    if(text.includes("cyberpunk")) return "cyberpunk";
+    if(text.includes("minecraft")) return "minecraft";
+    if(text.includes("ea sports fc") || text.includes("eafc") || text.includes("fc 25") || text.includes("fc 26")) return "eafc";
+    if(text.includes("game pass") || text.includes("xbox")) return "gamepass";
+    return raw;
+}
+
+function checkoutProductIconMarkup(product){
+    const key = getProductIconKey(product);
+    return productIconMarkup({ ...product, icon: key });
+}
 
 function productIconMarkup(product){
 
@@ -3974,8 +4046,8 @@ function startCheckout(productId){
 
         <div class="payment-product">
 
-            <div class="payment-icon">
-                ${product.icon}
+            <div class="payment-icon checkout-product-icon">
+                ${checkoutProductIconMarkup(product)}
             </div>
 
             <div>
