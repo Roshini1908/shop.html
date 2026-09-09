@@ -1,0 +1,6557 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tournyx Shop</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Razorpay Checkout -->
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Rajdhani',sans-serif;
+    background:#03050b;
+    color:#f5f7ff;
+    overflow-x:hidden;
+}
+
+button,
+input,
+select{
+    font-family:inherit;
+}
+
+.logo-main,
+.logo-sub,
+.hero-title,
+.section-title,
+.tab,
+.category-pill,
+.product-name,
+.tournyx,
+.buy-btn,
+.pro-btn,
+.payment-amount strong,
+.modal-action,
+.modal-head h2,
+.payment-message h2,
+.code-box,
+.status,
+.nav-text{
+    font-family:'Orbitron',sans-serif;
+}
+
+button{
+    cursor:pointer;
+}
+
+:root{
+    --bg:#03050b;
+    --panel:#080c16;
+    --panel2:#0c1220;
+    --panel3:#101827;
+    --border:rgba(255,255,255,.09);
+    --muted:#8993aa;
+    --text:#f5f7ff;
+    --cyan:#00d9ff;
+    --blue:#168cff;
+    --purple:#9d35ff;
+    --pink:#ff25c8;
+    --green:#00e676;
+    --yellow:#ffd43b;
+    --red:#ff4567;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar{
+    width:7px;
+    height:7px;
+}
+
+::-webkit-scrollbar-track{
+    background:#05070d;
+}
+
+::-webkit-scrollbar-thumb{
+    background:linear-gradient(var(--purple),var(--cyan));
+    border-radius:20px;
+}
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+    min-height:100vh;
+    display:flex;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    width:210px;
+    min-height:100vh;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    background:#05070d;
+    border-right:1px solid rgba(0,217,255,.12);
+    padding:22px 13px;
+    z-index:100;
+}
+
+.logo{
+    padding:5px 12px 25px;
+}
+
+.logo-main{
+    font-size:21px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.logo-main span{
+    color:var(--cyan);
+}
+
+.logo-sub{
+    color:var(--cyan);
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:3px;
+    margin-left:25px;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.nav-btn{
+    width:100%;
+    border:1px solid transparent;
+    background:transparent;
+    color:#9da6ba;
+    border-radius:10px;
+    padding:12px 13px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    text-align:left;
+    transition:.2s ease;
+}
+
+.nav-btn:hover{
+    color:white;
+    background:rgba(255,255,255,.04);
+}
+
+.nav-btn.active{
+    color:white;
+    background:linear-gradient(
+        100deg,
+        rgba(157,53,255,.22),
+        rgba(0,217,255,.15)
+    );
+    border-color:rgba(0,217,255,.5);
+    box-shadow:
+        0 0 18px rgba(0,217,255,.12),
+        inset 0 0 20px rgba(157,53,255,.06);
+}
+
+.nav-btn svg{
+    width:18px;
+}
+
+.nav-text{
+    font-size:12px;
+}
+
+.nav-text small{
+    display:block;
+    color:#6e7890;
+    font-size:9px;
+    margin-top:2px;
+}
+
+.pro-box{
+    margin-top:25px;
+    border:1px solid rgba(157,53,255,.3);
+    border-radius:10px;
+    padding:17px;
+    background:
+        radial-gradient(circle at 80% 20%,rgba(157,53,255,.15),transparent 40%),
+        #080914;
+}
+
+.pro-box h4{
+    color:#00d9ff;
+    font-size:17px;
+}
+
+.pro-box p{
+    color:#8891a7;
+    font-size:9px;
+    line-height:1.7;
+    margin:9px 0;
+}
+
+.pro-btn{
+    width:100%;
+    border:1px solid var(--purple);
+    background:linear-gradient(90deg,#44118a,#087bd3);
+    color:white;
+    padding:8px;
+    border-radius:6px;
+    font-size:10px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    width:calc(100% - 210px);
+    margin-left:210px;
+    min-height:100vh;
+    padding:20px 22px 35px;
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar{
+    height:55px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-bottom:17px;
+}
+
+.topbar-back-btn{
+    width:42px;
+    height:42px;
+    flex:0 0 auto;
+    border:1px solid rgba(0,217,255,.25);
+    border-radius:9px;
+    background:#080c15;
+    color:#fff;
+    display:grid;
+    place-items:center;
+}
+
+.topbar-back-btn:hover{
+    border-color:var(--cyan);
+    box-shadow:0 0 16px rgba(0,217,255,.12);
+}
+
+.topbar-back-btn svg{
+    width:18px;
+}
+
+.search{
+    height:39px;
+    flex:1;
+    position:relative;
+}
+
+.search svg{
+    position:absolute;
+    left:14px;
+    top:11px;
+    width:16px;
+    color:#778198;
+}
+
+.search input{
+    width:100%;
+    height:100%;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:8px;
+    background:#070b14;
+    color:white;
+    outline:none;
+    padding:0 85px 0 40px;
+    font-size:11px;
+}
+
+.search input:focus{
+    border-color:rgba(0,217,255,.5);
+    box-shadow:0 0 15px rgba(0,217,255,.08);
+}
+
+.shortcut{
+    position:absolute;
+    right:10px;
+    top:9px;
+    padding:3px 7px;
+    border-radius:4px;
+    color:#7e879a;
+    border:1px solid var(--border);
+    font-size:9px;
+}
+
+.wallet{
+    min-width:155px;
+    height:42px;
+    padding:7px 11px;
+    border:1px solid rgba(157,53,255,.35);
+    border-radius:9px;
+    background:#090b18;
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+.wallet svg{
+    color:var(--purple);
+}
+
+.wallet small{
+    color:#8d96ab;
+    font-size:8px;
+    display:block;
+}
+
+.wallet strong{
+    font-size:11px;
+}
+
+.add-money{
+    margin-left:auto;
+    width:23px;
+    height:23px;
+    border-radius:50%;
+    border:0;
+    background:#5519bc;
+    color:white;
+}
+
+.profile{
+    cursor:pointer;
+    height:42px;
+    padding:5px 10px;
+    min-width:150px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid var(--border);
+    border-radius:9px;
+    background:#080c15;
+}
+
+.avatar{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,#651aff,#00d9ff);
+    font-weight:800;
+    font-size:11px;
+}
+
+.profile div:nth-child(2){
+    flex:1;
+}
+
+.profile strong{
+    font-size:10px;
+}
+
+.profile small{
+    display:block;
+    color:#737e94;
+    font-size:8px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    min-height:118px;
+    border-radius:11px;
+    overflow:hidden;
+    border:1px solid rgba(157,53,255,.35);
+    position:relative;
+    background:
+        radial-gradient(circle at 80% 40%,rgba(0,217,255,.16),transparent 30%),
+        radial-gradient(circle at 65% 80%,rgba(157,53,255,.22),transparent 35%),
+        linear-gradient(110deg,#090a19,#0b1020 50%,#13091e);
+    margin-bottom:19px;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    right:0;
+    top:0;
+    width:48%;
+    height:100%;
+    background:
+        radial-gradient(circle at 60% 45%,rgba(157,53,255,.35),transparent 24%),
+        radial-gradient(circle at 75% 40%,rgba(0,217,255,.25),transparent 20%);
+    pointer-events:none;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    padding:25px;
+}
+
+.hero-label{
+    color:#aab1c5;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+.hero-title{
+    font-size:27px;
+    line-height:1.15;
+    font-weight:800;
+    margin:4px 0 8px;
+    background:linear-gradient(90deg,#00e5ff,#b13cff,#f1dfff);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.hero p{
+    color:#9ba4b7;
+    font-size:10px;
+}
+
+.security{
+    position:absolute;
+    right:27px;
+    top:34px;
+    z-index:3;
+    border:1px solid rgba(0,217,255,.35);
+    background:rgba(3,5,11,.6);
+    border-radius:7px;
+    padding:11px 17px;
+    font-size:10px;
+    color:#b7bfd1;
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section{
+    margin-top:19px;
+}
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:11px;
+}
+
+.section-title{
+    font-size:16px;
+    font-weight:700;
+}
+
+.section-title span{
+    color:#8993a9;
+    font-size:9px;
+    margin-left:8px;
+}
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.tabs-wrap{
+    position:sticky;
+    top:0;
+    z-index:50;
+    padding:8px 0;
+    background:rgba(3,5,11,.92);
+    backdrop-filter:blur(12px);
+}
+
+.tabs{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    scrollbar-width:none;
+}
+
+.tabs::-webkit-scrollbar{
+    display:none;
+}
+
+.tab{
+    flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.1);
+    background:#090d17;
+    color:#8993a8;
+    border-radius:8px;
+    padding:9px 17px;
+    font-size:10px;
+    transition:
+        transform .25s ease,
+        opacity .25s ease,
+        border-color .25s ease,
+        color .25s ease,
+        box-shadow .25s ease;
+}
+
+.tab:hover{
+    color:white;
+}
+
+.tab.active{
+    color:white;
+    border-color:#008fff;
+    background:linear-gradient(
+        90deg,
+        rgba(157,53,255,.2),
+        rgba(0,217,255,.13)
+    );
+    box-shadow:0 0 16px rgba(0,217,255,.1);
+}
+
+/* =========================================================
+   TAB CONTENT ANIMATION
+========================================================= */
+
+.tab-panel{
+    transform:translate3d(0,0,0);
+    opacity:1;
+    transition:
+        transform .25s ease,
+        opacity .25s ease;
+}
+
+.tab-panel.leaving{
+    transform:translate3d(16px,0,0);
+    opacity:0;
+}
+
+.tab-panel.entering{
+    transform:translate3d(-16px,0,0);
+    opacity:0;
+}
+
+/* =========================================================
+   CATEGORY PILLS
+========================================================= */
+
+.category-scroll{
+    display:flex;
+    gap:9px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    padding-bottom:5px;
+    touch-action:pan-x;
+}
+
+.category-scroll::-webkit-scrollbar{
+    display:none;
+}
+
+.category-pill{
+    flex:0 0 auto;
+    padding:10px 18px;
+    border-radius:22px;
+    border:1px solid rgba(255,255,255,.1);
+    background:#090d16;
+    color:#9ca5b9;
+    font-size:10px;
+    transition:.2s ease;
+}
+
+.category-pill.active{
+    color:white;
+    border-color:#008fff;
+    background:linear-gradient(
+        90deg,
+        rgba(28,106,255,.35),
+        rgba(0,217,255,.1)
+    );
+    box-shadow:0 0 16px rgba(0,217,255,.12);
+}
+
+/* =========================================================
+   PRODUCT GRID
+========================================================= */
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:11px;
+}
+
+.product-card{
+    min-width:0;
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:9px;
+    overflow:hidden;
+    background:
+        linear-gradient(180deg,#0b111d,#080b13);
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+    contain:layout paint;
+}
+
+.product-card:hover{
+    transform:translate3d(0,-3px,0);
+    border-color:rgba(0,217,255,.45);
+    box-shadow:0 8px 30px rgba(0,217,255,.08);
+}
+
+.product-image{
+    height:145px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 50% 45%,rgba(0,217,255,.28),transparent 22%),
+        linear-gradient(135deg,#071c3a,#150522);
+}
+
+.product-image::before{
+    content:"";
+    position:absolute;
+    width:110px;
+    height:70px;
+    border:3px solid rgba(0,217,255,.55);
+    border-radius:50%;
+    transform:rotate(-15deg);
+    box-shadow:0 0 30px rgba(0,217,255,.35);
+}
+
+.product-icon{
+    position:relative;
+    z-index:2;
+    font-size:55px;
+    filter:drop-shadow(0 0 13px rgba(0,217,255,.55));
+}
+
+/* =========================================================
+   PRODUCT BRAND ARTWORK
+========================================================= */
+
+.brand-art{
+    position:relative;
+    width:155px;
+    height:105px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    filter:drop-shadow(0 0 18px rgba(0,217,255,.32));
+    text-align:center;
+}
+
+.brand-word{
+    font-weight:900;
+    letter-spacing:1px;
+    font-size:20px;
+    line-height:1;
+}
+
+.brand-word span{margin-left:2px;}
+
+.bgmi-art .brand-word{
+    padding:4px 9px;
+    border:3px solid #f4f6ff;
+    color:#f4f6ff;
+    font-size:17px;
+    border-radius:3px;
+    background:rgba(0,0,0,.28);
+}
+
+.coin-stack{
+    position:relative;
+    width:88px;
+    height:48px;
+    margin-top:2px;
+}
+
+.coin-stack span{
+    position:absolute;
+    width:42px;
+    height:24px;
+    border-radius:50%;
+    border:3px solid #ffe08a;
+    background:linear-gradient(#ffd66b,#a86b13);
+    box-shadow:0 3px 0 #6f4107,0 0 14px rgba(255,190,45,.5);
+}
+
+.coin-stack span:nth-child(1){left:3px;bottom:3px;}
+.coin-stack span:nth-child(2){left:25px;bottom:11px;}
+.coin-stack span:nth-child(3){left:42px;bottom:3px;}
+
+.coin-stack b{
+    position:absolute;
+    z-index:2;
+    left:27px;
+    bottom:7px;
+    color:#fff2bd;
+    font-size:14px;
+    text-shadow:0 2px 5px #5a3200;
+}
+
+.freefire-art .brand-word{
+    color:#fff;
+    font-style:italic;
+    font-size:18px;
+    text-shadow:2px 0 #ff6a00,0 0 12px rgba(255,92,0,.6);
+}
+
+.diamond-stack{display:flex;gap:7px;align-items:center;margin-top:8px;}
+.diamond-stack i{
+    display:block;
+    width:25px;
+    height:25px;
+    transform:rotate(45deg);
+    border:2px solid #8be7ff;
+    background:linear-gradient(135deg,#43e9ff,#1264e9 55%,#7c39ff);
+    box-shadow:0 0 16px rgba(0,200,255,.75);
+}
+.diamond-stack i:nth-child(2){width:32px;height:32px;}
+
+.valorant-art{align-items:center;}
+.valorant-v{
+    font-size:48px;
+    font-weight:1000;
+    line-height:.65;
+    color:#ff4655;
+    transform:skew(-12deg);
+    text-shadow:0 0 18px rgba(255,70,85,.65);
+}
+.valorant-art .brand-word{color:#ff6671;font-size:13px;}
+.vp-coins{display:flex;gap:3px;margin-top:2px;}
+.vp-coins i{width:25px;height:12px;border-radius:50%;border:2px solid #ff8a94;background:#bd263b;box-shadow:0 0 12px rgba(255,60,80,.55);}
+
+.googleplay-art,.steam-art,.netflix-art,.roblox-art,.cyberpunk-art,.minecraft-art,.eafc-art,.gamepass-art{
+    border-radius:10px;
+    width:150px;
+    height:92px;
+    background:linear-gradient(145deg,rgba(13,42,75,.9),rgba(9,10,28,.8));
+    border:1px solid rgba(0,217,255,.22);
+    box-shadow:inset 0 0 25px rgba(0,217,255,.08),0 0 20px rgba(0,0,0,.3);
+}
+
+.play-triangle{
+    font-size:42px;
+    line-height:1;
+    color:#31d6ff;
+    text-shadow:-8px 0 #ffcf45,7px 0 #63e68a,0 0 16px rgba(49,214,255,.65);
+}
+.googleplay-art strong{font-size:12px;color:#f1f7ff;}
+.googleplay-art small,.netflix-art small,.steam-art small,.roblox-art small,.cyberpunk-art small,.minecraft-art small,.eafc-art small,.gamepass-art small{font-size:7px;letter-spacing:1.3px;color:#8fa7c9;}
+
+.netflix-art{background:linear-gradient(145deg,#1a0710,#07111e);}
+.netflix-n{font-size:48px;font-weight:900;color:#e50914;text-shadow:0 0 15px rgba(229,9,20,.55);line-height:.7;}
+.netflix-art strong{font-size:11px;letter-spacing:2px;color:#fff;}
+
+.steam-art{background:linear-gradient(145deg,#07182c,#102d4b);}
+.steam-symbol{font-size:36px;color:#d9efff;line-height:.8;text-shadow:0 0 15px rgba(130,200,255,.5);}
+.steam-art strong{font-size:13px;letter-spacing:2px;color:#fff;}
+
+.roblox-art{background:linear-gradient(145deg,#141414,#05070b);}
+.roblox-box{width:42px;height:42px;background:#fff;transform:rotate(-10deg);box-shadow:0 0 18px rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;}
+.roblox-box span{width:13px;height:13px;background:#111;transform:rotate(0deg);}
+.roblox-art strong{font-size:13px;color:#fff;letter-spacing:1px;}
+
+.cyberpunk-art{background:linear-gradient(145deg,#1b0b25,#070913);}
+.cyber-chip{font-size:27px;font-weight:900;color:#f4e95f;border:2px solid #f4e95f;padding:5px 10px;transform:skew(-8deg);box-shadow:0 0 16px rgba(244,233,95,.35);}
+.cyberpunk-art strong{font-size:11px;color:#ffe95b;letter-spacing:1px;}
+
+.minecraft-art{background:linear-gradient(145deg,#0b241c,#071019);}
+.minecraft-cube{width:48px;height:48px;background:linear-gradient(#67a82f 0 28%,#76512c 28%);border:2px solid #d4f5aa;box-shadow:0 0 15px rgba(82,200,90,.3);position:relative;}
+.minecraft-cube span{position:absolute;left:17px;top:25px;width:9px;height:9px;background:#222;}
+.minecraft-art strong{font-size:11px;color:#b8f18a;letter-spacing:1px;}
+
+.eafc-art{background:linear-gradient(145deg,#071e25,#090a13);}
+.fc-ball{font-size:38px;line-height:.8;filter:drop-shadow(0 0 10px rgba(255,255,255,.25));}
+.eafc-art strong{font-size:11px;color:#c9fff2;letter-spacing:1px;}
+
+.gamepass-art{background:linear-gradient(145deg,#07251c,#06110f);}
+.pass-x{width:48px;height:48px;border:3px solid #8bf000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#8bf000;box-shadow:0 0 18px rgba(139,240,0,.35);}
+.gamepass-art strong{font-size:11px;color:#b7ff4b;letter-spacing:1px;}
+
+.fallback-product-icon{font-size:55px;}
+
+.discount{
+    position:absolute;
+    left:7px;
+    top:7px;
+    z-index:4;
+    font-size:8px;
+    padding:4px 7px;
+    border-radius:4px;
+    background:#6517d9;
+    color:white;
+}
+
+.badge{
+    position:absolute;
+    right:7px;
+    top:7px;
+    z-index:4;
+    font-size:7px;
+    background:#075d72;
+    padding:4px 7px;
+    border-radius:4px;
+}
+
+.product-info{
+    padding:9px;
+}
+
+.product-name{
+    font-size:11px;
+    font-weight:600;
+}
+
+.product-sub{
+    color:#929bad;
+    font-size:9px;
+    margin-top:2px;
+}
+
+.comparator{
+    margin-top:8px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:6px;
+    padding:7px;
+    background:#080d17;
+}
+
+.comparator-title{
+    color:#00d9ff;
+    font-size:7px;
+    margin-bottom:5px;
+}
+
+.compare{
+    display:flex;
+    justify-content:space-between;
+}
+
+.compare small{
+    display:block;
+    color:#7c869c;
+    font-size:7px;
+}
+
+.market{
+    color:#8f98aa;
+    text-decoration:line-through;
+    font-size:10px;
+}
+
+.tournyx{
+    color:#00e6b1;
+    font-size:12px;
+    font-weight:700;
+}
+
+.save{
+    color:#00d9ff;
+    font-size:8px;
+    margin-top:3px;
+}
+
+.buy-btn{
+    width:100%;
+    margin-top:8px;
+    border:1px solid #813cff;
+    border-radius:6px;
+    padding:8px;
+    color:white;
+    background:linear-gradient(
+        90deg,
+        #6316d6,
+        #087cd7
+    );
+    font-size:9px;
+    font-weight:600;
+    transition:.2s ease;
+}
+
+.buy-btn:hover{
+    box-shadow:0 0 16px rgba(0,217,255,.25);
+}
+
+.buy-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.benefits{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+    margin-top:13px;
+}
+
+.benefit{
+    border:1px solid rgba(255,255,255,.07);
+    background:#070b13;
+    border-radius:8px;
+    padding:12px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+.benefit svg{
+    color:#00d9ff;
+}
+
+.benefit strong{
+    font-size:9px;
+}
+
+.benefit small{
+    display:block;
+    color:#737d91;
+    font-size:7px;
+}
+
+/* =========================================================
+   ORDERS
+========================================================= */
+
+.order-controls{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+}
+
+.order-controls select,
+.date-input{
+    background:#080d17;
+    color:#aab2c3;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:6px;
+    padding:9px 11px;
+    font-size:9px;
+    outline:none;
+}
+
+.orders-box{
+    border:1px solid rgba(255,255,255,.08);
+    background:#060a12;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.order-header{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr .8fr 1.3fr 1.3fr;
+    padding:12px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    color:#727d92;
+    font-size:8px;
+}
+
+.order-row{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr .8fr 1.3fr 1.3fr;
+    align-items:center;
+    padding:10px 12px;
+    border-bottom:1px solid rgba(255,255,255,.055);
+    min-height:70px;
+}
+
+.order-row:last-child{
+    border-bottom:0;
+}
+
+.order-product{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.order-img{
+    width:42px;
+    height:42px;
+    flex:0 0 42px;
+    border-radius:7px;
+    display:grid;
+    place-items:center;
+    position:relative;
+    overflow:hidden;
+    isolation:isolate;
+    background:linear-gradient(135deg,#1a1843,#082e44);
+    border:1px solid rgba(0,217,255,.15);
+    font-size:20px;
+}
+
+/* Reuse the exact Shop artwork inside the smaller Orders icon box,
+   but scale and clip it so no artwork can spill outside the 42x42 tile. */
+.order-img .brand-art{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:155px;
+    height:105px;
+    margin:0;
+    transform:translate(-50%,-50%) scale(.34);
+    transform-origin:center center;
+    filter:drop-shadow(0 0 8px rgba(0,217,255,.28));
+    pointer-events:none;
+}
+
+.order-img .googleplay-art,
+.order-img .steam-art,
+.order-img .netflix-art,
+.order-img .roblox-art,
+.order-img .cyberpunk-art,
+.order-img .minecraft-art,
+.order-img .eafc-art,
+.order-img .gamepass-art{
+    width:150px;
+    height:92px;
+}
+
+.order-img .brand-word{font-size:20px;}
+.order-img .bgmi-art .brand-word{font-size:17px;}
+.order-img .freefire-art .brand-word{font-size:18px;}
+.order-img .valorant-v{font-size:48px;}
+.order-img .valorant-art .brand-word{font-size:13px;}
+.order-img .play-triangle{font-size:42px;}
+.order-img .netflix-n{font-size:48px;}
+.order-img .steam-symbol{font-size:36px;}
+.order-img .roblox-box{width:42px;height:42px;}
+.order-img .cyber-chip{font-size:27px;}
+.order-img .minecraft-cube{width:48px;height:48px;}
+.order-img .fc-ball{font-size:38px;}
+.order-img .pass-x{width:48px;height:48px;font-size:28px;}
+
+.order-img .fallback-product-icon{
+    font-size:23px;
+    line-height:1;
+}
+
+.order-product strong{
+    display:block;
+    font-size:10px;
+}
+
+.order-product small{
+    color:#778196;
+    font-size:8px;
+}
+
+.order-cell{
+    color:#aab2c2;
+    font-size:9px;
+}
+
+.order-cell small{
+    display:block;
+    color:#69748b;
+    font-size:7px;
+    margin-top:2px;
+}
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    padding:5px 8px;
+    border-radius:5px;
+    font-size:8px;
+}
+
+.status.success{
+    color:#00e676;
+    background:rgba(0,230,118,.08);
+    border:1px solid rgba(0,230,118,.2);
+}
+
+.status.pending{
+    color:#ffd43b;
+    background:rgba(255,212,59,.08);
+    border:1px solid rgba(255,212,59,.2);
+}
+
+.status.failed{
+    color:#ff4567;
+    background:rgba(255,69,103,.08);
+    border:1px solid rgba(255,69,103,.2);
+}
+
+.code-box{
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:5px;
+    padding:7px;
+    color:#707b91;
+    font-size:8px;
+}
+
+.action-buttons{
+    display:flex;
+    gap:5px;
+    flex-wrap:wrap;
+}
+
+.small-btn{
+    border:1px solid rgba(0,217,255,.35);
+    background:#08121e;
+    color:#c7d0df;
+    padding:7px 8px;
+    border-radius:5px;
+    font-size:7px;
+}
+
+.small-btn:hover{
+    border-color:var(--cyan);
+    color:white;
+}
+
+.retry-btn{
+    border-color:rgba(255,69,103,.4);
+    color:#ff718b;
+}
+
+/* =========================================================
+   AUTHENTICATION
+========================================================= */
+.auth-signin-btn{width:100%;height:30px;border:1px solid rgba(0,217,255,.45);border-radius:6px;background:linear-gradient(90deg,rgba(99,22,214,.9),rgba(8,124,215,.9));color:#fff;font-size:9px;font-weight:700;letter-spacing:.7px;display:flex;align-items:center;justify-content:center;gap:6px}.auth-signin-btn svg{width:13px;height:13px;flex:0 0 auto}
+.auth-signin-btn:hover{box-shadow:0 0 15px rgba(0,217,255,.2)}
+.auth-user-info{width:100%;display:flex;align-items:center;gap:8px}.auth-user-info>div:nth-child(2){flex:1;min-width:0}.auth-user-info strong,.auth-user-info small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.auth-signout-btn{border:1px solid rgba(255,69,103,.35);background:rgba(255,69,103,.07);color:#ff718b;border-radius:5px;padding:5px 6px;font-size:7px;font-weight:700}.auth-signout-btn:hover{border-color:#ff4567;color:#fff}
+.auth-modal-overlay{z-index:900}.auth-modal{width:min(420px,100%);background:linear-gradient(180deg,#0c1020,#070b14);border:1px solid rgba(157,53,255,.48);border-radius:14px;padding:22px;box-shadow:0 0 55px rgba(157,53,255,.18),0 25px 90px rgba(0,0,0,.65);animation:modalIn .2s ease}.auth-modal-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}.auth-modal-icon{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;background:rgba(157,53,255,.14);border:1px solid rgba(157,53,255,.3);font-size:21px}.auth-kicker{color:var(--cyan);font-size:8px;font-weight:700;letter-spacing:2px}.auth-modal h2{font-family:'Orbitron',sans-serif;font-size:18px;margin-top:3px}.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}.auth-tab{border:1px solid rgba(255,255,255,.1);background:#090d17;color:#8e98ad;border-radius:7px;padding:10px;font-size:9px;font-weight:700;letter-spacing:.7px}.auth-tab.active{color:#fff;border-color:var(--cyan);background:linear-gradient(90deg,rgba(157,53,255,.18),rgba(0,217,255,.1));box-shadow:0 0 14px rgba(0,217,255,.08)}.auth-field{margin-bottom:12px}.auth-field label{display:block;color:#8993aa;font-size:8px;font-weight:600;margin-bottom:6px;letter-spacing:.5px}.auth-field input{width:100%;height:40px;padding:0 12px;border:1px solid rgba(255,255,255,.1);border-radius:7px;background:#060a12;color:#fff;outline:none;font-size:10px}.auth-field input:focus{border-color:rgba(0,217,255,.55);box-shadow:0 0 15px rgba(0,217,255,.08)}.auth-password-wrap{position:relative}.auth-password-wrap input{padding-right:40px}.auth-password-toggle{position:absolute;right:0;top:0;height:40px;width:40px;display:grid;place-items:center;background:none;border:0;color:#778198;padding:0}.auth-password-toggle:hover{color:#fff}.auth-password-toggle svg{width:16px;height:16px}.auth-submit{width:100%;margin-top:4px;border:1px solid #813cff;border-radius:7px;padding:11px;color:#fff;background:linear-gradient(90deg,#6316d6,#087cd7);font-size:9px;font-weight:700}.auth-submit:disabled{opacity:.65;cursor:wait}.auth-message{min-height:18px;margin-top:10px;text-align:center;font-size:9px;line-height:1.5}.auth-divider{display:flex;align-items:center;gap:9px;color:#68738a;font-size:8px;margin:15px 0}.auth-divider span{flex:1;height:1px;background:rgba(255,255,255,.07)}.auth-demo{width:100%;border:1px solid rgba(255,255,255,.12);background:#090d17;color:#b7c0d0;border-radius:7px;padding:10px;font-size:8px;font-weight:700}.auth-demo:hover{border-color:var(--cyan);color:#fff}.auth-note{margin-top:9px;color:#68738a;font-size:7px;line-height:1.55;text-align:center}@media(max-width:700px){.auth-modal{padding:18px}.profile{min-width:auto}}
+
+.account-modal-overlay{z-index:950}.account-modal{width:min(520px,calc(100% - 28px));background:linear-gradient(180deg,#0c1020,#070b14);border:1px solid rgba(0,217,255,.32);border-radius:14px;padding:20px;box-shadow:0 0 55px rgba(0,217,255,.12),0 25px 90px rgba(0,0,0,.65)}.account-modal-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}.account-avatar-large{width:52px;height:52px;flex:0 0 52px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#651aff,#00d9ff);font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px}.account-modal-title-wrap{min-width:0;flex:1}.account-modal h2{font-family:'Orbitron',sans-serif;font-size:18px;margin-top:3px}.account-details-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.account-detail-card{min-width:0;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:#080d17;padding:11px}.account-detail-card small{display:block;color:#6f7b92;font-size:7px;letter-spacing:1px;margin-bottom:5px}.account-detail-card strong{display:block;color:#f5f7ff;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.account-modal-actions{display:flex;gap:8px;margin-top:14px}.account-modal-actions button{flex:1;border:1px solid rgba(0,217,255,.3);border-radius:7px;padding:10px;background:linear-gradient(90deg,rgba(99,22,214,.85),rgba(8,124,215,.85));color:#fff;font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700}.account-modal-actions button:last-child{background:rgba(255,69,103,.07);border-color:rgba(255,69,103,.35);color:#ff718b}@media(max-width:500px){.account-modal{width:calc(100% - 20px);padding:16px}.account-details-grid{grid-template-columns:1fr}.account-modal-actions{flex-direction:column}}
+/* =========================================================
+   MODAL
+========================================================= */
+
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    z-index:500;
+    display:none;
+    place-items:center;
+    padding:20px;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(8px);
+}
+
+.modal-overlay.show{
+    display:grid;
+}
+
+.modal{
+    width:min(500px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:#090d17;
+    border:1px solid rgba(157,53,255,.4);
+    border-radius:14px;
+    box-shadow:
+        0 0 50px rgba(157,53,255,.15),
+        0 20px 80px rgba(0,0,0,.5);
+    animation:modalIn .2s ease;
+}
+
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:translate3d(0,12px,0) scale(.98);
+    }
+    to{
+        opacity:1;
+        transform:translate3d(0,0,0) scale(1);
+    }
+}
+
+.modal-head{
+    padding:18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid var(--border);
+}
+
+.modal-head h2{
+    font-size:16px;
+}
+
+.close{
+    width:30px;
+    height:30px;
+    border-radius:7px;
+    border:1px solid var(--border);
+    background:#101522;
+    color:#aab2c2;
+}
+
+.modal-body{
+    padding:20px;
+}
+
+.payment-product{
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.payment-icon{
+    width:55px;
+    height:55px;
+    border-radius:9px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,#171c48,#062b40);
+    font-size:28px;
+}
+
+.payment-product strong{
+    font-size:13px;
+}
+
+.payment-product small{
+    display:block;
+    color:#7f899d;
+    font-size:9px;
+}
+
+.payment-amount{
+    margin:17px 0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.payment-amount span{
+    color:#8993a8;
+    font-size:10px;
+}
+
+.payment-amount strong{
+    color:#00e6b1;
+    font-size:22px;
+}
+
+.modal-action{
+    width:100%;
+    border:1px solid #803aff;
+    color:white;
+    background:linear-gradient(90deg,#6818dd,#007fdd);
+    padding:11px;
+    border-radius:7px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.modal-action:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.payment-message{
+    text-align:center;
+    padding:20px 5px;
+}
+
+.payment-icon-large{
+    width:65px;
+    height:65px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    margin:0 auto 14px;
+}
+
+.payment-icon-large.success{
+    color:#00e676;
+    background:rgba(0,230,118,.1);
+}
+
+.payment-icon-large.pending{
+    color:#ffd43b;
+    background:rgba(255,212,59,.1);
+}
+
+.payment-icon-large.failed{
+    color:#ff4567;
+    background:rgba(255,69,103,.1);
+}
+
+.payment-message h2{
+    font-size:18px;
+}
+
+.payment-message p{
+    color:#80899c;
+    font-size:9px;
+    margin-top:5px;
+}
+
+.details{
+    margin-top:15px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    overflow:hidden;
+}
+
+.detail-row{
+    display:flex;
+    justify-content:space-between;
+    padding:9px 11px;
+    border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+.detail-row:last-child{
+    border-bottom:0;
+}
+
+.detail-row span:first-child{
+    color:#778196;
+    font-size:8px;
+}
+
+.detail-row span:last-child{
+    color:#e2e6ee;
+    font-size:8px;
+    text-align:right;
+}
+
+.gift-code{
+    margin-top:14px;
+    border:1px dashed rgba(0,217,255,.45);
+    background:rgba(0,217,255,.04);
+    border-radius:8px;
+    padding:13px;
+    text-align:center;
+}
+
+.gift-code small{
+    color:#768196;
+    font-size:8px;
+}
+
+.gift-code strong{
+    display:block;
+    color:#00e6b1;
+    letter-spacing:2px;
+    margin:5px 0 10px;
+}
+
+.copy-code{
+    border:1px solid rgba(0,217,255,.3);
+    background:#08151e;
+    color:#00d9ff;
+    padding:6px 12px;
+    border-radius:5px;
+    font-size:8px;
+}
+
+/* =========================================================
+   GAME UID
+========================================================= */
+
+.uid-section{
+    margin-top:15px;
+}
+
+.uid-label{
+    display:block;
+    color:#aab2c2;
+    font-size:9px;
+    margin-bottom:6px;
+}
+
+.uid-input{
+    width:100%;
+    height:40px;
+    padding:0 12px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:7px;
+    background:#070b14;
+    color:white;
+    outline:none;
+    font-size:10px;
+}
+
+.uid-input:focus{
+    border-color:rgba(0,217,255,.55);
+    box-shadow:0 0 15px rgba(0,217,255,.08);
+}
+
+.uid-help{
+    display:block;
+    margin-top:5px;
+    color:#69748b;
+    font-size:7px;
+}
+
+.uid-error{
+    display:none;
+    color:#ff718b;
+    font-size:8px;
+    margin-top:5px;
+}
+
+.uid-error.show{
+    display:block;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:700;
+    background:#0b111c;
+    border:1px solid rgba(0,217,255,.35);
+    border-radius:8px;
+    padding:12px 15px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:9px;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+    transform:translate3d(0,20px,0);
+    opacity:0;
+    pointer-events:none;
+    transition:.25s ease;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translate3d(0,0,0);
+}
+
+.toast svg{
+    color:#00e676;
+}
+
+/* =========================================================
+   MOBILE NAV
+========================================================= */
+
+.mobile-nav{
+    display:none;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .product-grid{
+        grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .profile{
+        min-width:auto;
+    }
+
+    .wallet{
+        min-width:125px;
+    }
+}
+
+@media(max-width:850px){
+
+    .order-img{
+        width:42px;
+        height:42px;
+        flex-basis:42px;
+        overflow:hidden;
+    }
+
+    .order-img .brand-art{
+        transform:translate(-50%,-50%) scale(.34);
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        width:100%;
+        margin-left:0;
+        padding:14px 12px 85px;
+    }
+
+    .topbar{
+        gap:8px;
+    }
+
+    .wallet{
+        display:none;
+    }
+
+    .profile{
+        min-width:auto;
+        height:38px;
+        padding:0;
+        border:0;
+        background:none;
+    }
+
+    .profile .auth-signin-btn{
+        width:38px;
+        height:38px;
+        padding:0;
+        border-radius:9px;
+    }
+
+    .profile .auth-signin-label{
+        display:none;
+    }
+
+    .auth-user-info{
+        gap:6px;
+    }
+
+    .auth-user-info>div:nth-child(2){
+        display:none;
+    }
+
+    .hero{
+        min-height:130px;
+    }
+
+    .security{
+        display:none;
+    }
+
+    .product-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:10px;
+    }
+
+    .product-image{
+        height:155px;
+    }
+
+    .benefits{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .orders-box{
+        overflow-x:auto;
+    }
+
+    .order-header,
+    .order-row{
+        min-width:800px;
+    }
+
+    .mobile-nav{
+        position:fixed;
+        display:flex;
+        left:0;
+        right:0;
+        bottom:0;
+        height:65px;
+        background:rgba(5,7,13,.96);
+        border-top:1px solid rgba(255,255,255,.1);
+        z-index:200;
+        justify-content:space-around;
+        align-items:center;
+        backdrop-filter:blur(12px);
+    }
+
+    .mobile-nav button{
+        background:none;
+        border:0;
+        color:#6f788b;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:3px;
+        font-size:8px;
+    }
+
+    .mobile-nav button.active{
+        color:#00d9ff;
+    }
+
+    .mobile-nav svg{
+        width:18px;
+    }
+}
+
+@media(max-width:500px){
+
+    .hero-title{
+        font-size:22px;
+    }
+
+    .hero-content{
+        padding:20px;
+    }
+
+    .hero p{
+        max-width:75%;
+    }
+
+    .section-title{
+        font-size:14px;
+    }
+
+    .product-image{
+        height:135px;
+    }
+
+    .product-icon{
+        font-size:47px;
+    }
+
+    .benefits{
+        display:none;
+    }
+
+    .tab{
+        padding:9px 13px;
+    }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.001ms!important;
+        transition-duration:.001ms!important;
+    }
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+.cart-top-btn{position:relative;width:42px;height:42px;border:1px solid rgba(0,217,255,.25);border-radius:9px;background:#080c15;color:#fff;display:grid;place-items:center;flex:0 0 auto}.cart-top-btn:hover{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,217,255,.12)}.cart-top-btn svg{width:18px}.cart-badge{position:absolute;right:-5px;top:-5px;min-width:18px;height:18px;padding:0 5px;border-radius:10px;background:linear-gradient(90deg,#6517d9,#087cd7);border:1px solid rgba(255,255,255,.25);font:700 8px 'Orbitron',sans-serif;display:grid;place-items:center;color:#fff}.cart-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(6px);z-index:1200;display:none}.cart-drawer-overlay.show{display:block}.cart-drawer{position:absolute;right:0;top:0;height:100%;width:min(430px,94vw);background:linear-gradient(180deg,#0b1020,#050810);border-left:1px solid rgba(0,217,255,.25);box-shadow:-20px 0 70px rgba(0,0,0,.55);display:flex;flex-direction:column;animation:cartIn .22s ease}.cart-drawer-head{padding:18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}.cart-drawer-head h2{font:700 15px 'Orbitron',sans-serif}.cart-close{width:31px;height:31px;border:1px solid var(--border);border-radius:7px;background:#101522;color:#aab2c2}.cart-items{flex:1;overflow:auto;padding:12px}.cart-item{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;border:1px solid rgba(255,255,255,.08);background:#080d17;border-radius:9px;padding:10px;margin-bottom:8px}.cart-item-icon{width:48px;height:48px;border-radius:7px;display:grid;place-items:center;background:linear-gradient(135deg,#171c48,#062b40);font-size:24px}.cart-item-name{font:600 10px 'Orbitron',sans-serif}.cart-item-sub{color:#778196;font-size:8px;margin-top:3px}.cart-item-price{color:#00e6b1;font:700 11px 'Orbitron',sans-serif;text-align:right}.cart-qty{display:flex;align-items:center;gap:6px;margin-top:7px}.cart-qty button{width:23px;height:23px;border:1px solid rgba(0,217,255,.3);border-radius:5px;background:#08121e;color:#fff}.cart-qty span{min-width:18px;text-align:center;font:700 9px 'Orbitron',sans-serif}.cart-remove{margin-top:5px;border:0;background:none;color:#ff718b;font-size:7px;padding:0}.cart-summary{border-top:1px solid var(--border);padding:15px 16px;background:#070b14}.cart-row{display:flex;justify-content:space-between;color:#8993a8;font-size:9px;margin-bottom:8px}.cart-row.total{color:#fff;font:700 15px 'Orbitron',sans-serif;margin-top:10px}.cart-row.total strong{color:#00e6b1}.cart-checkout-btn{width:100%;border:1px solid #813cff;border-radius:7px;padding:11px;color:#fff;background:linear-gradient(90deg,#6316d6,#087cd7);font:700 9px 'Orbitron',sans-serif;margin-top:10px}.cart-empty{text-align:center;color:#788398;font-size:10px;padding:50px 20px}.cart-empty strong{display:block;color:#fff;font:700 13px 'Orbitron',sans-serif;margin-bottom:7px}.cart-mini-actions{display:flex;gap:7px;margin-top:8px}.cart-mini-actions button{flex:1;padding:8px;border-radius:6px;font-size:8px;border:1px solid rgba(0,217,255,.25);background:#08121e;color:#b8c1d0}.cart-mini-actions button:hover{border-color:var(--cyan);color:#fff}.buy-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.buy-actions .buy-btn{margin-top:0}.add-cart-btn{width:100%;border:1px solid rgba(0,217,255,.45);border-radius:6px;padding:8px;color:#fff;background:#08151e;font:600 9px 'Orbitron',sans-serif}.add-cart-btn:hover{background:rgba(0,217,255,.1);box-shadow:0 0 14px rgba(0,217,255,.12)}.add-cart-btn.added{border-color:#00e676;color:#00e676}.cart-toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:1300;background:#0b111c;border:1px solid rgba(0,217,255,.4);border-radius:8px;padding:10px 15px;color:#fff;font-size:9px;transition:.22s}.cart-toast.show{opacity:1;transform:translate(-50%,0)}@keyframes cartIn{from{transform:translateX(30px);opacity:.6}to{transform:translateX(0);opacity:1}}
+/* CART PRODUCT ARTWORK — same Shop icons, tightly contained with no overflow */
+.cart-item-icon{
+    width:48px;
+    height:48px;
+    flex:0 0 48px;
+    position:relative;
+    overflow:hidden;
+    isolation:isolate;
+    display:grid;
+    place-items:center;
+    border-radius:7px;
+    background:linear-gradient(135deg,#171c48,#062b40);
+    border:1px solid rgba(0,217,255,.14);
+    font-size:20px;
+}
+.cart-item-icon .brand-art{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:155px;
+    height:105px;
+    margin:0;
+    transform:translate(-50%,-50%) scale(.32);
+    transform-origin:center center;
+    filter:drop-shadow(0 0 7px rgba(0,217,255,.25));
+    pointer-events:none;
+}
+.cart-item-icon .googleplay-art,
+.cart-item-icon .steam-art,
+.cart-item-icon .netflix-art,
+.cart-item-icon .roblox-art,
+.cart-item-icon .cyberpunk-art,
+.cart-item-icon .minecraft-art,
+.cart-item-icon .eafc-art,
+.cart-item-icon .gamepass-art{
+    width:150px;
+    height:92px;
+}
+.cart-item-icon .brand-word{font-size:19px;}
+.cart-item-icon .bgmi-art .brand-word{font-size:16px;}
+.cart-item-icon .freefire-art .brand-word{font-size:17px;}
+.cart-item-icon .valorant-v{font-size:46px;}
+.cart-item-icon .valorant-art .brand-word{font-size:12px;}
+.cart-item-icon .play-triangle{font-size:40px;}
+.cart-item-icon .netflix-n{font-size:46px;}
+.cart-item-icon .steam-symbol{font-size:34px;}
+.cart-item-icon .roblox-box{width:40px;height:40px;}
+.cart-item-icon .cyber-chip{font-size:26px;}
+.cart-item-icon .minecraft-cube{width:46px;height:46px;}
+.cart-item-icon .fc-ball{font-size:36px;}
+.cart-item-icon .pass-x{width:46px;height:46px;font-size:27px;}
+.cart-item-icon .fallback-product-icon{font-size:22px;line-height:1;}
+@media(max-width:700px){
+    .cart-item-icon{width:44px;height:44px;flex-basis:44px;overflow:hidden;}
+    .cart-item-icon .brand-art{transform:translate(-50%,-50%) scale(.30);}
+}
+
+@media(max-width:700px){.cart-top-btn,.topbar-back-btn{width:38px;height:38px}.cart-drawer{width:100%}.buy-actions{grid-template-columns:1fr}.cart-item{grid-template-columns:44px 1fr auto}.cart-item-icon{width:44px;height:44px}}
+
+/* =========================================================
+   FINAL MOBILE ORDER HISTORY STABILITY FIX
+   No horizontal page overflow; orders become stacked cards.
+========================================================= */
+@media (max-width: 850px){
+  html, body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden !important;
+  }
+
+  .main{
+    width:100% !important;
+    max-width:100% !important;
+    margin-left:0 !important;
+    box-sizing:border-box;
+    overflow-x:hidden;
+  }
+
+  .orders-box{
+    width:100% !important;
+    max-width:100% !important;
+    box-sizing:border-box;
+    overflow:visible !important;
+    min-width:0 !important;
+  }
+
+  .order-header{
+    display:none !important;
+  }
+
+  .order-row{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    align-items:flex-start !important;
+    gap:10px !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:0 !important;
+    padding:12px !important;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+
+  .order-product{
+    flex:1 1 calc(100% - 55px);
+    min-width:0 !important;
+    max-width:100%;
+  }
+
+  .order-product > div:last-child{
+    min-width:0 !important;
+    max-width:100%;
+    overflow:hidden;
+  }
+
+  .order-product strong,
+  .order-product small{
+    display:block;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .order-row > *{
+    min-width:0;
+  }
+
+  /* Keep every field inside the card instead of forcing a wide table. */
+  .order-row > div:not(.order-product){
+    flex:1 1 calc(50% - 6px);
+    max-width:100%;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+
+  .order-row .order-actions{
+    flex:1 1 100%;
+    width:100%;
+    max-width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    overflow:visible;
+  }
+
+  .order-row button{
+    max-width:100%;
+    box-sizing:border-box;
+  }
+
+  /* Never let Shop artwork escape its order tile. */
+  .order-img{
+    width:42px !important;
+    height:42px !important;
+    min-width:42px !important;
+    max-width:42px !important;
+    flex:0 0 42px !important;
+    overflow:hidden !important;
+    position:relative;
+    border-radius:7px;
+    box-sizing:border-box;
+  }
+
+  .order-img .brand-art{
+    max-width:none !important;
+    overflow:hidden;
+  }
+
+  .order-controls{
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
+    overflow-x:auto;
+    overflow-y:hidden;
+    flex-wrap:nowrap !important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+
+  .order-controls::-webkit-scrollbar{
+    display:none;
+  }
+
+  .order-controls select,
+  .order-controls input,
+  .date-input{
+    flex:0 0 auto;
+    max-width:100%;
+  }
+}
+
+@media (max-width:500px){
+  .main{
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+
+  .orders-box{
+    border-radius:8px;
+  }
+
+  .order-row{
+    padding:10px !important;
+    gap:8px !important;
+  }
+
+  .order-row > div:not(.order-product){
+    flex-basis:100%;
+  }
+
+  .order-product{
+    flex-basis:100%;
+  }
+
+  .order-row .order-actions{
+    flex-direction:row;
+  }
+
+  .order-row .order-actions button{
+    flex:1 1 auto;
+    min-width:0;
+  }
+
+  .order-img{
+    width:40px !important;
+    height:40px !important;
+    min-width:40px !important;
+    max-width:40px !important;
+    flex-basis:40px !important;
+  }
+}
+</style>
+
+</head>
+
+<body class="auth-locked">
+
+<div class="app">
+
+<aside class="sidebar">
+
+<div class="logo">
+    <div class="logo-main">⚡ TOUR<span>NYX</span></div>
+    <div class="logo-sub">ESPORTS</div>
+</div>
+
+<nav class="nav">
+
+    <button class="nav-btn">
+        <i data-lucide="layout-dashboard"></i>
+        <span class="nav-text">Dashboard</span>
+    </button>
+
+    <button class="nav-btn active" id="desktopShopBtn">
+        <i data-lucide="shopping-bag"></i>
+        <span class="nav-text">
+            Shop
+            <small>Top-ups & more</small>
+        </span>
+    </button>
+
+    <button class="nav-btn" id="desktopOrdersBtn">
+        <i data-lucide="clipboard-list"></i>
+        <span class="nav-text">
+            My Orders
+            <small>View purchase history</small>
+        </span>
+    </button>
+
+    <button class="nav-btn">
+        <i data-lucide="wallet"></i>
+        <span class="nav-text">
+            My Wallet
+            <small>Balance & transactions</small>
+        </span>
+    </button>
+
+    <button class="nav-btn">
+        <i data-lucide="shield"></i>
+        <span class="nav-text">Membership</span>
+    </button>
+
+    <button class="nav-btn">
+        <i data-lucide="star"></i>
+        <span class="nav-text">Rewards</span>
+    </button>
+
+    <button class="nav-btn">
+        <i data-lucide="tag"></i>
+        <span class="nav-text">Deals</span>
+    </button>
+
+    <button class="nav-btn">
+        <i data-lucide="headphones"></i>
+        <span class="nav-text">Support</span>
+    </button>
+
+</nav>
+
+<div class="pro-box">
+    <small style="color:#8993a8;font-size:8px">TOURNYX</small>
+    <h4>PRO PASS</h4>
+    <p>
+        ✦ Exclusive discounts<br>
+        ✦ Priority support<br>
+        ✦ Early access deals
+    </p>
+    <button class="pro-btn">Upgrade Now</button>
+</div>
+
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+
+    <button class="topbar-back-btn" id="topbarBackButton" type="button" aria-label="Go back" title="Back">
+        <i data-lucide="arrow-left"></i>
+    </button>
+
+    <div class="search">
+        <i data-lucide="search"></i>
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Search your orders, games or codes..."
+        >
+        <span class="shortcut">Ctrl /</span>
+    </div>
+
+    <div class="wallet">
+        <i data-lucide="wallet"></i>
+        <div>
+            <small>Tournyx Wallet</small>
+            <strong>₹1,250.60</strong>
+        </div>
+        <button class="add-money">+</button>
+    </div>
+
+    <button class="cart-top-btn" id="cartTopButton" type="button" aria-label="Open cart" title="Cart">
+        <i data-lucide="shopping-cart"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+    </button>
+
+    <div class="profile" id="topbar-auth-profile">
+        <button class="auth-signin-btn" id="topbar-signin-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span class="auth-signin-label">SIGN IN</span>
+        </button>
+        <div class="auth-user-info" id="topbar-account-info" style="display:none;">
+            <div class="avatar" id="topbar-avatar">?</div>
+            <div><strong id="topbar-user-name">Guest</strong><small id="topbar-user-status">Signed out</small></div>
+            <button class="auth-signout-btn" id="topbar-signout-btn" type="button">OUT</button>
+        </div>
+    </div>
+
+</header>
+
+<!-- =========================================================
+     TOURNYX AUTHENTICATION MODAL
+========================================================= -->
+<div class="modal-overlay account-modal-overlay" id="account-modal-overlay" aria-hidden="true"><div class="account-modal" role="dialog" aria-modal="true"><div class="account-modal-head"><div class="account-avatar-large" id="account-avatar-large">?</div><div class="account-modal-title-wrap"><div class="auth-kicker">TOURNYX ACCOUNT</div><h2>Account Details</h2></div><button class="close" id="account-modal-close" type="button">✕</button></div><div class="account-details-grid"><div class="account-detail-card"><small>NAME</small><strong id="account-detail-name">—</strong></div><div class="account-detail-card"><small>EMAIL</small><strong id="account-detail-email">—</strong></div><div class="account-detail-card"><small>PLAYER ID</small><strong id="account-detail-player-id">—</strong></div><div class="account-detail-card"><small>ACCOUNT ID</small><strong id="account-detail-user-id">—</strong></div><div class="account-detail-card"><small>STATUS</small><strong id="account-detail-status">Authenticated</strong></div><div class="account-detail-card"><small>ORDERS</small><strong id="account-detail-orders">0</strong></div></div><div class="account-modal-actions"><button id="account-modal-orders" type="button">VIEW ORDER HISTORY</button><button id="account-modal-signout" type="button">SIGN OUT</button></div></div></div>
+
+<div class="modal-overlay auth-modal-overlay" id="auth-modal-overlay" aria-hidden="true">
+    <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+        <div class="auth-modal-head">
+            <div class="auth-modal-icon">🛡️</div>
+            <div>
+                <div class="auth-kicker">TOURNYX ACCOUNT</div>
+                <h2 id="auth-modal-title">Sign In</h2>
+            </div>
+            <button class="close" id="auth-modal-close" type="button" aria-label="Close">✕</button>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="auth-tab-signin" type="button">SIGN IN</button>
+            <button class="auth-tab" id="auth-tab-signup" type="button">SIGN UP</button>
+        </div>
+
+        <div class="auth-field">
+            <label for="auth-email">EMAIL</label>
+            <input id="auth-email" type="email" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+
+        <div class="auth-field">
+            <label for="auth-password">PASSWORD</label>
+            <div class="auth-password-wrap">
+                <input id="auth-password" type="password" placeholder="At least 8 characters" autocomplete="current-password" minlength="8" required>
+                <button type="button" class="auth-password-toggle" id="auth-password-toggle" aria-label="Show password" aria-pressed="false" tabindex="-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <button class="auth-submit" id="auth-submit-btn" type="button">SIGN IN</button>
+        <div class="auth-message" id="auth-message" aria-live="polite"></div>
+
+        <div class="auth-divider"><span></span>OR<span></span></div>
+        
+        <div class="auth-note">Demo mode is for UI testing only and does not create a real Supabase account.</div>
+    </div>
+</div>
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-label">LEVEL UP YOUR GAME</div>
+
+        <h1 class="hero-title">
+            TOP-UPS, GIFT CARDS & MORE
+        </h1>
+
+        <p>
+            Instant delivery. Secure payments. Best prices only on Tournyx.
+        </p>
+
+    </div>
+
+    <div class="security">
+        🛡 Secure Payments<br>
+        <small style="color:#788399">100% Protected</small>
+    </div>
+
+</section>
+
+<div class="tabs-wrap">
+
+    <div class="tabs" id="mainTabs">
+
+        <button class="tab active" data-tab="topups">
+            Gaming Top-Ups
+        </button>
+
+        <button class="tab" data-tab="giftcards">
+            Gift Cards
+        </button>
+
+        <button class="tab" data-tab="gamekeys">
+            Game Keys
+        </button>
+
+        <button class="tab" data-tab="orders">
+            Orders History
+        </button>
+
+    </div>
+
+</div>
+
+<div id="tabContainer">
+
+    <section class="tab-panel" data-panel="topups">
+
+        <div class="section">
+
+            <div class="section-header">
+                <h2 class="section-title">
+                    Browse Categories
+                </h2>
+            </div>
+
+            <div class="category-scroll">
+
+                <button class="category-pill active" data-filter="all">
+                    All
+                </button>
+
+                <button class="category-pill" data-filter="bgmi">
+                    🎮 BGMI
+                </button>
+
+                <button class="category-pill" data-filter="freefire">
+                    🔥 Free Fire
+                </button>
+
+                <button class="category-pill" data-filter="valorant">
+                    ⚡ Valorant
+                </button>
+
+                <button class="category-pill" data-filter="gaming">
+                    🎮 Gaming
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="section">
+
+            <div class="section-header">
+                <h2 class="section-title">
+                    Top Deals
+                    <span>↗ Live Price Comparator</span>
+                </h2>
+            </div>
+
+            <div class="product-grid" id="topupProducts"></div>
+
+        </div>
+
+        <div class="benefits">
+
+            <div class="benefit">
+                <i data-lucide="zap"></i>
+                <div>
+                    <strong>Instant Delivery</strong>
+                    <small>Get instantly in-game</small>
+                </div>
+            </div>
+
+            <div class="benefit">
+                <i data-lucide="shield-check"></i>
+                <div>
+                    <strong>Secure Payments</strong>
+                    <small>100% safe & encrypted</small>
+                </div>
+            </div>
+
+            <div class="benefit">
+                <i data-lucide="tag"></i>
+                <div>
+                    <strong>Best Prices</strong>
+                    <small>Guaranteed savings</small>
+                </div>
+            </div>
+
+            <div class="benefit">
+                <i data-lucide="headphones"></i>
+                <div>
+                    <strong>24/7 Support</strong>
+                    <small>Always here to help</small>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="tab-panel" data-panel="giftcards" style="display:none">
+
+        <div class="section">
+
+            <div class="section-header">
+                <h2 class="section-title">
+                    Gift Cards
+                    <span>Instant Digital Delivery</span>
+                </h2>
+            </div>
+
+            <div class="category-scroll">
+
+                <button class="category-pill active" data-filter="all">
+                    All
+                </button>
+
+                <button class="category-pill" data-filter="gaming">
+                    🎁 Gaming
+                </button>
+
+                <button class="category-pill" data-filter="entertainment">
+                    📱 Entertainment
+                </button>
+
+                <button class="category-pill" data-filter="wallet">
+                    💳 Wallet
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="section">
+            <div class="product-grid" id="giftProducts"></div>
+        </div>
+
+    </section>
+
+    <section class="tab-panel" data-panel="gamekeys" style="display:none">
+
+        <div class="section">
+
+            <div class="section-header">
+                <h2 class="section-title">
+                    Game Keys
+                    <span>Digital PC Games</span>
+                </h2>
+            </div>
+
+            <div class="category-scroll">
+
+                <button class="category-pill active" data-filter="all">
+                    All Games
+                </button>
+
+                <button class="category-pill" data-filter="pc">
+                    💻 PC
+                </button>
+
+                <button class="category-pill" data-filter="popular">
+                    🔥 Popular
+                </button>
+
+                <button class="category-pill" data-filter="new">
+                    🆕 New Releases
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="section">
+            <div class="product-grid" id="keyProducts"></div>
+        </div>
+
+    </section>
+
+    <section class="tab-panel" data-panel="orders" style="display:none">
+
+        <div class="section">
+
+            <div class="section-header">
+                <h2 class="section-title">
+                    Digital Orders Vault
+                </h2>
+            </div>
+
+            <div class="order-controls">
+
+                <select id="orderProductFilter">
+                    <option value="all">All Orders</option>
+                    <option value="BGMI">BGMI</option>
+                    <option value="Free Fire">Free Fire</option>
+                    <option value="Google Play">Google Play</option>
+                    <option value="Netflix">Netflix</option>
+                    <option value="Steam">Steam</option>
+                    <option value="Valorant">Valorant</option>
+                </select>
+
+                <select id="orderStatusFilter">
+                    <option value="all">All Status</option>
+                    <option value="Success">Success</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Failed">Failed</option>
+                </select>
+
+                <select id="orderPaymentFilter">
+                    <option value="all">All Payments</option>
+                    <option value="UPI">UPI</option>
+                    <option value="Card">Card</option>
+                    <option value="Wallet">Wallet</option>
+                </select>
+
+                <input class="date-input" id="dateFilter" type="date">
+
+                <select id="sortFilter">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="amountHigh">Amount High → Low</option>
+                    <option value="amountLow">Amount Low → High</option>
+                </select>
+
+            </div>
+
+            <div class="orders-box">
+
+                <div class="order-header">
+                    <div>ORDER DETAILS</div>
+                    <div>DATE</div>
+                    <div>PAYMENT STATUS</div>
+                    <div>AMOUNT</div>
+                    <div>CODE</div>
+                    <div>ACTION</div>
+                </div>
+
+                <div id="ordersList"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+</main>
+
+</div>
+
+<nav class="mobile-nav">
+
+<button>
+    <i data-lucide="arrow-left"></i>
+    Back
+</button>
+
+<button class="active" id="mobileShop">
+    <i data-lucide="home"></i>
+    Shop
+</button>
+
+<button>
+    <i data-lucide="grid-2x2"></i>
+    Categories
+</button>
+
+<button id="mobileOrders">
+    <i data-lucide="package"></i>
+    Orders
+</button>
+
+<button>
+    <i data-lucide="menu"></i>
+    More
+</button>
+
+</nav>
+
+<!-- =========================================================
+     SHOPPING CART
+========================================================= -->
+<div class="cart-drawer-overlay" id="cartOverlay" aria-hidden="true">
+    <aside class="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping cart">
+        <div class="cart-drawer-head">
+            <h2>🛒 MY CART <span id="cartHeaderCount" style="color:var(--cyan);font-size:9px">0 ITEMS</span></h2>
+            <button class="cart-close" id="cartClose" type="button">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-summary">
+            <div class="cart-row"><span>Items</span><strong id="cartItemsTotal">0</strong></div>
+            <div class="cart-row"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div>
+            <div class="cart-row"><span>Delivery</span><strong style="color:#00e676">FREE</strong></div>
+            <div class="cart-row total"><span>TOTAL</span><strong id="cartGrandTotal">₹0</strong></div>
+            <button class="cart-checkout-btn" id="cartCheckoutButton" type="button">CHECKOUT CART</button>
+            <div class="cart-mini-actions">
+                <button id="cartContinueShopping" type="button">CONTINUE SHOPPING</button>
+                <button id="cartClearButton" type="button">CLEAR CART</button>
+            </div>
+        </div>
+    </aside>
+</div>
+<div class="cart-toast" id="cartToast"></div>
+
+<div class="modal-overlay" id="paymentModal">
+
+<div class="modal">
+
+    <div class="modal-head">
+
+        <h2 id="paymentModalTitle">
+            Checkout
+        </h2>
+
+        <button
+            class="close"
+            onclick="closeModal('paymentModal')"
+        >
+            ✕
+        </button>
+
+    </div>
+
+    <div class="modal-body" id="paymentBody"></div>
+
+</div>
+
+</div>
+
+<div class="modal-overlay" id="receiptModal">
+
+<div class="modal">
+
+    <div class="modal-head">
+
+        <h2>Transaction Receipt</h2>
+
+        <button
+            class="close"
+            onclick="closeModal('receiptModal')"
+        >
+            ✕
+        </button>
+
+    </div>
+
+    <div class="modal-body" id="receiptBody"></div>
+
+</div>
+
+</div>
+
+<div class="toast" id="toast">
+
+<i data-lucide="check-circle-2"></i>
+
+<span id="toastText">Done</span>
+
+</div>
+
+<script>
+
+/* =========================================================
+   DATA
+========================================================= */
+
+let products = [
+
+    {
+        id:1,
+        name:"BGMI UC",
+        sub:"60 UC",
+        type:"topups",
+        category:"bgmi",
+        icon:"bgmi",
+        market:75,
+        price:66,
+        discount:"-12% OFF"
+    },
+
+    {
+        id:2,
+        name:"BGMI UC",
+        sub:"300 + 25 UC",
+        type:"topups",
+        category:"bgmi",
+        icon:"bgmi",
+        market:380,
+        price:323,
+        discount:"-15% OFF"
+    },
+
+    {
+        id:3,
+        name:"BGMI UC",
+        sub:"600 + 60 UC",
+        type:"topups",
+        category:"bgmi",
+        icon:"bgmi",
+        market:750,
+        price:615,
+        discount:"-18% OFF",
+        badge:"BESTSELLER"
+    },
+
+    {
+        id:4,
+        name:"BGMI UC",
+        sub:"1500 + 150 UC",
+        type:"topups",
+        category:"bgmi",
+        icon:"bgmi",
+        market:1900,
+        price:1520,
+        discount:"-20% OFF"
+    },
+
+    {
+        id:5,
+        name:"Free Fire Diamonds",
+        sub:"520 Diamonds",
+        type:"topups",
+        category:"freefire",
+        icon:"freefire",
+        market:450,
+        price:405,
+        discount:"-10% OFF"
+    },
+
+    {
+        id:6,
+        name:"Valorant Points",
+        sub:"475 VP",
+        type:"topups",
+        category:"valorant",
+        icon:"valorant",
+        market:500,
+        price:438,
+        discount:"-12% OFF"
+    },
+
+    {
+        id:7,
+        name:"Free Fire Diamonds",
+        sub:"1060 Diamonds",
+        type:"topups",
+        category:"freefire",
+        icon:"freefire",
+        market:900,
+        price:792,
+        discount:"-12% OFF"
+    },
+
+    {
+        id:8,
+        name:"Valorant Points",
+        sub:"1000 VP",
+        type:"topups",
+        category:"valorant",
+        icon:"valorant",
+        market:1000,
+        price:875,
+        discount:"-12% OFF"
+    },
+
+    {
+        id:9,
+        name:"Google Play Gift Card",
+        sub:"₹500 Voucher",
+        type:"giftcards",
+        category:"gift",
+        icon:"googleplay",
+        market:550,
+        price:500,
+        discount:"-9% OFF"
+    },
+
+    {
+        id:10,
+        name:"Netflix Gift Card",
+        sub:"₹250 Voucher",
+        type:"giftcards",
+        category:"gift",
+        icon:"netflix",
+        market:280,
+        price:250,
+        discount:"-11% OFF"
+    },
+
+    {
+        id:11,
+        name:"Steam Wallet Code",
+        sub:"₹500 Wallet Code",
+        type:"giftcards",
+        category:"gift",
+        icon:"steam",
+        market:600,
+        price:500,
+        discount:"-17% OFF"
+    },
+
+    {
+        id:12,
+        name:"Roblox Gift Card",
+        sub:"₹500 Voucher",
+        type:"giftcards",
+        category:"gift",
+        icon:"roblox",
+        market:580,
+        price:500,
+        discount:"-14% OFF"
+    },
+
+    {
+        id:13,
+        name:"Cyberpunk 2077",
+        sub:"PC Game Key",
+        type:"gamekeys",
+        category:"gaming",
+        icon:"cyberpunk",
+        market:2999,
+        price:2199,
+        discount:"-27% OFF"
+    },
+
+    {
+        id:14,
+        name:"Minecraft Java",
+        sub:"PC Game Key",
+        type:"gamekeys",
+        category:"gaming",
+        icon:"minecraft",
+        market:2399,
+        price:1999,
+        discount:"-17% OFF"
+    },
+
+    {
+        id:15,
+        name:"EA Sports FC",
+        sub:"PC Game Key",
+        type:"gamekeys",
+        category:"gaming",
+        icon:"eafc",
+        market:3499,
+        price:2799,
+        discount:"-20% OFF"
+    },
+
+    {
+        id:16,
+        name:"Game Pass",
+        sub:"1 Month",
+        type:"gamekeys",
+        category:"gaming",
+        icon:"gamepass",
+        market:699,
+        price:579,
+        discount:"-17% OFF"
+    }
+
+];
+
+
+/* =========================================================
+   SUPABASE CONFIGURATION
+========================================================= */
+const SUPABASE_URL="https://yjxmmbfflrbjvahqrryw.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_lued0vt0Krc2Zxe4OrTQlA_EoHPnaSW";
+
+/* =========================================================
+   BACKEND
+========================================================= */
+
+const BACKEND_URL = `${SUPABASE_URL}/functions/v1`;
+
+/* Centralized secure API gateway. Protected requests automatically carry
+   the current Supabase JWT. Prices, totals, discounts and user identity
+   are never accepted from the browser as authoritative values. */
+async function apiRequest(path, options = {}) {
+    if (!tournyxSupabase) throw new Error("Supabase is not configured.");
+    const { data: { session } } = await tournyxSupabase.auth.getSession();
+    if (!session?.access_token) throw new Error("Please sign in before continuing.");
+    const headers = {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+        "Authorization": `Bearer ${session.access_token}`
+    };
+    const response = await fetch(`${BACKEND_URL}/${path.replace(/^\//, "")}`, { ...options, headers });
+    let data = {};
+    try { data = await response.json(); } catch (_) {}
+    if (!response.ok) throw new Error(data.message || data.error || `API request failed (${response.status}).`);
+    return data;
+}
+
+async function loadProductsFromSupabase() {
+    if (!tournyxSupabase) return;
+    const { data, error } = await tournyxSupabase
+        .from("products")
+        .select(`
+    id,
+    title,
+    game,
+    price,
+    active,
+    icon,
+    created_at,
+    type,
+    category,
+    filters,
+    market,
+    discount,
+    badge
+`)
+        .eq("active", true)
+        .order("id");
+    if (error) { console.error("Product API:", error); return; }
+
+    // Preserve the complete local catalog metadata (type, category,
+    // market price, discount and badge) while taking the authoritative
+    // product price/title/variant from Supabase.
+    const catalogMeta = new Map(products.map(product => [Number(product.id), product]));
+
+    products = (data || []).map(p => {
+        const id = Number(p.id);
+        const meta = catalogMeta.get(id) || {};
+        let type = meta.type;
+        let category = meta.category;
+        let filters = Array.isArray(meta.filters) ? meta.filters.slice() : [];
+
+        // Stable ID mapping keeps the database catalog independent of
+        // title wording and prevents products such as Steam from being
+        // classified into the wrong shop section.
+        if (id >= 1 && id <= 8) {
+            type = "topups";
+            category = meta.category || "gaming";
+            filters = [category, "gaming"];
+        } else if (id >= 9 && id <= 12) {
+            type = "giftcards";
+            category = id === 10 ? "entertainment" : (id === 9 ? "wallet" : "gaming");
+            filters = [category];
+        } else if (id >= 13 && id <= 16) {
+            type = "gamekeys";
+            category = "gaming";
+            filters = ["pc"];
+            if ([13,14,15].includes(id)) filters.push("popular");
+            if ([15,16].includes(id)) filters.push("new");
+        }
+
+        return {
+            id,
+            name: p.title || meta.name || "Digital Product",
+            sub: p.game || meta.sub || "Digital Product",
+            type,
+            category,
+            filters,
+            icon: p.icon || meta.icon || "gamepad-2",
+            market: Number(meta.market ?? p.price),
+            price: Number(p.price),
+            discount: meta.discount || "",
+            badge: meta.badge || ""
+        };
+    });
+    renderProducts();
+}
+
+function mapOrderRecord(o) {
+    const product = o.products || o.product || {};
+    const d = new Date(o.created_at || o.date || Date.now());
+    const tx = Array.isArray(o.transactions) ? o.transactions[0] : o.transactions;
+    return {
+        id: o.id,
+        product: product.title || o.product_title || "Order",
+        sub: product.game || o.product_game || "Digital Product",
+        icon: product.icon || o.product_icon || "🎮",
+        date: d.toISOString().slice(0,10),
+        time: d.toLocaleTimeString("en-IN", {hour:"2-digit",minute:"2-digit"}),
+        amount: Number(o.amount || 0),
+        payment: (tx && tx.payment_method) || o.payment_method || "—",
+        status: normalizeOrderStatus(o.status),
+        code: null // gift codes are never bundled in the list — only fetched via reveal-voucher on explicit request
+    };
+}
+
+async function loadOrdersFromSupabase() {
+    if (!tournyxSupabase || !authUser) return;
+    /* Prefer the backend's authoritative /orders route (server-side, scoped to
+       the authenticated user). Falls back to a direct Supabase query — still
+       protected by RLS — if that route isn't deployed yet, so nothing breaks
+       while the backend catches up. */
+    try {
+        const data = await apiRequest("orders", { method: "GET" });
+        const list = Array.isArray(data) ? data : (data.orders || data.data || null);
+        if (Array.isArray(list)) {
+            orders = list.map(mapOrderRecord);
+            renderOrders();
+            return;
+        }
+    } catch (error) {
+        console.warn("Backend /orders unavailable, falling back to direct Supabase query:", error.message);
+    }
+    const { data, error } = await tournyxSupabase
+        .from("orders")
+        .select("id,quantity,amount,status,created_at,region_id,product_id,products(title,game,icon),transactions(payment_method,payment_id,status)")
+        .eq("user_id", authUser.id)
+        .order("created_at", { ascending: false });
+    if (error) { console.error("Order API:", error); return; }
+    orders = (data || []).map(mapOrderRecord);
+    renderOrders();
+}
+
+
+
+/* =========================================================
+   INITIAL ORDERS
+========================================================= */
+
+const defaultOrders = [
+
+    {
+        id:"TXN-TRX-10482",
+        product:"BGMI",
+        sub:"660 UC",
+        icon:"bgmi",
+        date:"2026-08-24",
+        time:"10:24 PM",
+        amount:615,
+        payment:"UPI",
+        status:"Success",
+        code:"BGMI-8K2P-91LM"
+    },
+
+    {
+        id:"TXN-TRX-10481",
+        product:"Free Fire",
+        sub:"520 Diamonds",
+        icon:"freefire",
+        date:"2026-08-24",
+        time:"09:45 PM",
+        amount:405,
+        payment:"Card",
+        status:"Pending",
+        code:null
+    },
+
+    {
+        id:"TXN-TRX-10480",
+        product:"Google Play",
+        sub:"₹500 Voucher",
+        icon:"googleplay",
+        date:"2026-08-24",
+        time:"08:30 PM",
+        amount:500,
+        payment:"Wallet",
+        status:"Success",
+        code:"GPLAY-8F4K-21PQ"
+    },
+
+    {
+        id:"TXN-TRX-10479",
+        product:"Netflix",
+        sub:"₹250 Voucher",
+        icon:"netflix",
+        date:"2026-08-24",
+        time:"07:15 PM",
+        amount:250,
+        payment:"UPI",
+        status:"Success",
+        code:"NETF-72KL-90AZ"
+    },
+
+    {
+        id:"TXN-TRX-10478",
+        product:"Steam",
+        sub:"₹500 Wallet Code",
+        icon:"steam",
+        date:"2026-08-23",
+        time:"06:40 PM",
+        amount:500,
+        payment:"Card",
+        status:"Success",
+        code:"STEAM-82KF-19PL"
+    },
+
+    {
+        id:"TXN-TRX-10477",
+        product:"Valorant",
+        sub:"1000 VP",
+        icon:"valorant",
+        date:"2026-08-23",
+        time:"04:15 PM",
+        amount:875,
+        payment:"UPI",
+        status:"Failed",
+        code:null
+    }
+
+];
+
+
+let orders = loadOrders();
+
+
+function loadOrders(){
+
+    try{
+
+        const saved =
+            localStorage.getItem("tournyx_orders");
+
+        if(saved){
+
+            const parsed =
+                JSON.parse(saved);
+
+            if(Array.isArray(parsed)){
+                return parsed;
+            }
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Could not load saved orders:",
+            error
+        );
+
+    }
+
+    return [...defaultOrders];
+
+}
+
+
+function saveOrders(){
+
+    try{
+
+        localStorage.setItem(
+            "tournyx_orders",
+            JSON.stringify(orders)
+        );
+
+    }catch(error){
+
+        console.error(
+            "Could not save orders:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CURRENT CHECKOUT STATE
+========================================================= */
+
+let paymentBusy = false;
+let currentProduct = null;
+let currentGameUID = "";
+let currentRazorpayOrder = null;
+
+
+/* =========================================================
+   ICONS
+========================================================= */
+
+lucide.createIcons();
+
+
+/* =========================================================
+   SAVINGS
+========================================================= */
+
+function calculateSavings(market,price){
+
+    const saving = market - price;
+
+    const percent = (saving / market) * 100;
+
+    return {
+        amount:saving,
+        percent:percent.toFixed(1)
+    };
+
+}
+
+
+/* =========================================================
+   PRODUCT ICON ARTWORK
+========================================================= */
+
+function productIconMarkup(product){
+
+    const icon = String(product.icon || "").toLowerCase();
+
+    const icons = {
+
+        bgmi: `
+            <div class="brand-art bgmi-art">
+                <div class="brand-word">BGMI</div>
+                <div class="coin-stack">
+                    <span></span><span></span><span></span>
+                    <b>UC</b>
+                </div>
+            </div>`,
+
+        freefire: `
+            <div class="brand-art freefire-art">
+                <div class="brand-word">FREE<span>FIRE</span></div>
+                <div class="diamond-stack"><i></i><i></i><i></i><i></i></div>
+            </div>`,
+
+        valorant: `
+            <div class="brand-art valorant-art">
+                <div class="valorant-v">V</div>
+                <div class="brand-word">VALORANT</div>
+                <div class="vp-coins"><i></i><i></i><i></i></div>
+            </div>`,
+
+        googleplay: `
+            <div class="brand-art googleplay-art">
+                <div class="play-triangle">▶</div>
+                <strong>Google Play</strong>
+                <small>GIFT CARD</small>
+            </div>`,
+
+        netflix: `
+            <div class="brand-art netflix-art">
+                <div class="netflix-n">N</div>
+                <strong>NETFLIX</strong>
+                <small>GIFT CARD</small>
+            </div>`,
+
+        steam: `
+            <div class="brand-art steam-art">
+                <div class="steam-symbol">⚙</div>
+                <strong>STEAM</strong>
+                <small>WALLET CODE</small>
+            </div>`,
+
+        roblox: `
+            <div class="brand-art roblox-art">
+                <div class="roblox-box"><span></span></div>
+                <strong>ROBLOX</strong>
+                <small>GIFT CARD</small>
+            </div>`,
+
+        cyberpunk: `
+            <div class="brand-art cyberpunk-art">
+                <div class="cyber-chip">2077</div>
+                <strong>CYBERPUNK</strong>
+                <small>PC GAME KEY</small>
+            </div>`,
+
+        minecraft: `
+            <div class="brand-art minecraft-art">
+                <div class="minecraft-cube"><span></span></div>
+                <strong>MINECRAFT</strong>
+                <small>JAVA EDITION</small>
+            </div>`,
+
+        eafc: `
+            <div class="brand-art eafc-art">
+                <div class="fc-ball">⚽</div>
+                <strong>EA SPORTS FC</strong>
+                <small>PC GAME KEY</small>
+            </div>`,
+
+        gamepass: `
+            <div class="brand-art gamepass-art">
+                <div class="pass-x">X</div>
+                <strong>GAME PASS</strong>
+                <small>1 MONTH</small>
+            </div>`
+    };
+
+    return icons[icon] || `<div class="fallback-product-icon">${product.icon || "🎮"}</div>`;
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+function productCard(product){
+
+    const savings =
+        calculateSavings(
+            product.market,
+            product.price
+        );
+
+    return `
+
+        <article
+            class="product-card"
+            data-category="${product.category}"
+        >
+
+            <div class="product-image">
+
+                <span class="discount">
+                    ${product.discount}
+                </span>
+
+                ${
+                    product.badge
+                    ?
+                    `<span class="badge">${product.badge}</span>`
+                    :
+                    ""
+                }
+
+                <div class="product-icon">
+                    ${productIconMarkup(product)}
+                </div>
+
+            </div>
+
+            <div class="product-info">
+
+                <div class="product-name">
+                    ${product.name}
+                </div>
+
+                <div class="product-sub">
+                    ${product.sub}
+                </div>
+
+                <div class="comparator">
+
+                    <div class="comparator-title">
+                        ↗ LIVE PRICE COMPARATOR
+                    </div>
+
+                    <div class="compare">
+
+                        <div>
+                            <small>Market Price</small>
+                            <span class="market">
+                                ₹${product.market.toLocaleString()}
+                            </span>
+                        </div>
+
+                        <div style="text-align:right">
+
+                            <small>Tournyx Price</small>
+
+                            <span class="tournyx">
+                                ₹${product.price.toLocaleString()}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="save">
+                        Save ₹${savings.amount.toLocaleString()}
+                        (${savings.percent}%)
+                    </div>
+
+                </div>
+
+                <div class="buy-actions">
+                    <button
+                        class="add-cart-btn"
+                        data-add-cart="${product.id}"
+                        type="button"
+                    >
+                        🛒 ADD TO CART
+                    </button>
+                    <button
+                        class="buy-btn"
+                        onclick="startCheckout(${product.id})"
+                        type="button"
+                    >
+                        BUY NOW
+                    </button>
+                </div>
+
+            </div>
+
+        </article>
+
+    `;
+
+}
+
+
+/* =========================================================
+   RENDER PRODUCTS
+========================================================= */
+
+function renderProducts(){
+
+    document.getElementById("topupProducts").innerHTML =
+        products
+        .filter(p => p.type === "topups")
+        .map(productCard)
+        .join("");
+
+    document.getElementById("giftProducts").innerHTML =
+        products
+        .filter(p => p.type === "giftcards")
+        .map(productCard)
+        .join("");
+
+    document.getElementById("keyProducts").innerHTML =
+        products
+        .filter(p => p.type === "gamekeys")
+        .map(productCard)
+        .join("");
+
+    lucide.createIcons();
+
+}
+
+
+/* =========================================================
+   CATEGORY FILTER
+========================================================= */
+
+document.addEventListener(
+    "click",
+    function(event){
+
+        const button =
+            event.target.closest(".category-pill");
+
+        if(!button){
+            return;
+        }
+
+        const parent =
+            button.parentElement;
+
+        parent
+        .querySelectorAll(".category-pill")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+        button.classList.add("active");
+
+        const filter =
+            button.dataset.filter;
+
+        const productGrid =
+            button
+            .closest(".tab-panel")
+            ?.querySelector(".product-grid");
+
+        if(!productGrid){
+            return;
+        }
+
+        const type =
+            button
+            .closest(".tab-panel")
+            .dataset.panel;
+
+        const matchingProducts =
+            products.filter(product => {
+
+                if(product.type !== type){
+                    return false;
+                }
+
+                if(!filter || filter === "all"){
+                    return true;
+                }
+
+                if(Array.isArray(product.filters) && product.filters.length){
+                    return product.filters.includes(filter);
+                }
+
+                return Array.isArray(product.filters)
+                    ? product.filters.includes(filter)
+                    : product.category === filter;
+
+            });
+
+        productGrid.innerHTML =
+            matchingProducts
+            .map(productCard)
+            .join("");
+
+        lucide.createIcons();
+
+    }
+);
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+const tabs =
+    document.querySelectorAll(".tab");
+
+const panels =
+    document.querySelectorAll(".tab-panel");
+
+
+function switchTab(target){
+    setActiveTabState(target);
+
+    const current =
+        document.querySelector(
+            ".tab-panel:not([style*='display: none'])"
+        );
+
+    const next =
+        document.querySelector(
+            `.tab-panel[data-panel="${target}"]`
+        );
+
+    if(!next || current === next){
+        return;
+    }
+
+    if(current){
+
+        current.classList.add("leaving");
+
+        setTimeout(() => {
+
+            current.style.display = "none";
+
+            current.classList.remove("leaving");
+
+            next.style.display = "block";
+
+            next.classList.add("entering");
+
+            requestAnimationFrame(() => {
+
+                next.classList.remove("entering");
+
+            });
+
+        },250);
+
+    }else{
+
+        next.style.display = "block";
+
+    }
+
+    tabs.forEach(tab => {
+
+        tab.classList.toggle(
+            "active",
+            tab.dataset.tab === target
+        );
+
+    });
+
+}
+
+
+tabs.forEach(tab => {
+
+    tab.addEventListener(
+        "click",
+        () => switchTab(tab.dataset.tab)
+    );
+
+});
+
+
+/* =========================================================
+   ORDERS
+========================================================= */
+
+/* Orders can come from Supabase or the local demo list. Resolve the
+   order to the same icon key used by the Shop catalog so both views
+   always display the same artwork. */
+function getOrderIconKey(order){
+    const raw = String(order?.icon || "").trim().toLowerCase();
+
+    const knownKeys = [
+        "bgmi","freefire","valorant","googleplay","netflix","steam",
+        "roblox","cyberpunk","minecraft","eafc","gamepass"
+    ];
+
+    if(knownKeys.includes(raw)){
+        return raw;
+    }
+
+    const name = String(order?.product || "").toLowerCase();
+    const sub = String(order?.sub || "").toLowerCase();
+    const haystack = `${name} ${sub}`;
+
+    if(haystack.includes("bgmi")) return "bgmi";
+    if(haystack.includes("free fire") || haystack.includes("freefire") || haystack.includes("diamond")) return "freefire";
+    if(haystack.includes("valorant") || haystack.includes("vp")) return "valorant";
+    if(haystack.includes("google play") || haystack.includes("gplay")) return "googleplay";
+    if(haystack.includes("netflix")) return "netflix";
+    if(haystack.includes("steam")) return "steam";
+    if(haystack.includes("roblox")) return "roblox";
+    if(haystack.includes("cyberpunk")) return "cyberpunk";
+    if(haystack.includes("minecraft")) return "minecraft";
+    if(haystack.includes("ea sports fc") || haystack.includes("eafc")) return "eafc";
+    if(haystack.includes("game pass") || haystack.includes("gamepass")) return "gamepass";
+
+    /* If the order came from Supabase without an icon, try the Shop
+       catalog by product title before falling back to a plain emoji. */
+    const catalogMatch = products.find(p => {
+        const productName = String(p.name || "").toLowerCase();
+        const productSub = String(p.sub || "").toLowerCase();
+        return productName === name ||
+               productName.includes(name) ||
+               name.includes(productName) ||
+               (sub && productSub === sub);
+    });
+
+    return String(catalogMatch?.icon || "🎮").toLowerCase();
+}
+
+function orderIconMarkup(order){
+    const iconKey = getOrderIconKey(order);
+    return productIconMarkup({ icon: iconKey });
+}
+
+function renderOrders(){
+
+    const productFilter =
+        document.getElementById(
+            "orderProductFilter"
+        ).value;
+
+    const statusFilter =
+        document.getElementById(
+            "orderStatusFilter"
+        ).value;
+
+    const paymentFilter =
+        document.getElementById(
+            "orderPaymentFilter"
+        ).value;
+
+    const dateFilter =
+        document.getElementById(
+            "dateFilter"
+        ).value;
+
+    const sort =
+        document.getElementById(
+            "sortFilter"
+        ).value;
+
+    let filtered =
+        [...orders];
+
+    if(productFilter !== "all"){
+
+        filtered =
+            filtered.filter(
+                order =>
+                order.product === productFilter
+            );
+
+    }
+
+    if(statusFilter !== "all"){
+
+        filtered =
+            filtered.filter(
+                order =>
+                order.status === statusFilter
+            );
+
+    }
+
+    if(paymentFilter !== "all"){
+
+        filtered =
+            filtered.filter(
+                order =>
+                order.payment === paymentFilter
+            );
+
+    }
+
+    if(dateFilter){
+
+        filtered =
+            filtered.filter(
+                order =>
+                order.date === dateFilter
+            );
+
+    }
+
+    if(sort === "newest"){
+
+        filtered.sort(
+            (a,b) =>
+            new Date(b.date + " " + b.time)
+            -
+            new Date(a.date + " " + a.time)
+        );
+
+    }
+
+    if(sort === "oldest"){
+
+        filtered.sort(
+            (a,b) =>
+            new Date(a.date + " " + a.time)
+            -
+            new Date(b.date + " " + b.time)
+        );
+
+    }
+
+    if(sort === "amountHigh"){
+
+        filtered.sort(
+            (a,b) =>
+            b.amount - a.amount
+        );
+
+    }
+
+    if(sort === "amountLow"){
+
+        filtered.sort(
+            (a,b) =>
+            a.amount - b.amount
+        );
+
+    }
+
+    const container =
+        document.getElementById("ordersList");
+
+
+    if(filtered.length === 0){
+
+        container.innerHTML = `
+
+            <div
+                style="
+                padding:35px;
+                text-align:center;
+                color:#778196;
+                font-size:10px;
+                "
+            >
+                No transactions found.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        filtered
+        .map(order => {
+
+            const statusClass =
+                order.status.toLowerCase();
+
+            let codeHTML;
+
+            if(order.status === "Success"){
+
+                codeHTML = `
+
+                    <div class="code-box">
+                        •••• •••• ••••
+                    </div>
+
+                `;
+
+            }else if(order.status === "Pending"){
+
+                codeHTML = `
+
+                    <div class="code-box">
+                        Processing...
+                    </div>
+
+                `;
+
+            }else{
+
+                codeHTML = `
+
+                    <div class="code-box">
+                        Not available
+                    </div>
+
+                `;
+
+            }
+
+
+            let actionHTML = "";
+
+
+            if(order.status === "Success"){
+
+                actionHTML = `
+
+                    <button
+                        class="small-btn"
+                        onclick="revealGiftCode('${order.id}')"
+                    >
+                        👁 Reveal Code
+                    </button>
+
+                    <button
+                        class="small-btn"
+                        onclick="copyGiftCode('${order.id}')"
+                    >
+                        📋 Copy Code
+                    </button>
+
+                    <button
+                        class="small-btn"
+                        onclick="viewReceipt('${order.id}')"
+                    >
+                        Receipt
+                    </button>
+
+                `;
+
+            }
+
+            else if(order.status === "Pending"){
+
+                actionHTML = `
+
+                    <button
+                        class="small-btn"
+                        disabled
+                    >
+                        Processing...
+                    </button>
+
+                    <button
+                        class="small-btn"
+                        onclick="viewReceipt('${order.id}')"
+                    >
+                        Receipt
+                    </button>
+
+                `;
+
+            }
+
+            else{
+
+                actionHTML = `
+
+                    <button
+                        class="small-btn retry-btn"
+                        onclick="retryOrder('${order.id}')"
+                    >
+                        ↻ Retry Payment
+                    </button>
+
+                    <button
+                        class="small-btn"
+                        onclick="viewReceipt('${order.id}')"
+                    >
+                        Receipt
+                    </button>
+
+                `;
+
+            }
+
+
+            return `
+
+                <div class="order-row">
+
+                    <div class="order-product">
+
+                        <div class="order-img" aria-hidden="true">
+                            ${orderIconMarkup(order)}
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                ${order.product}
+                            </strong>
+
+                            <small>
+                                ${order.sub}
+                            </small>
+
+                            <small>
+                                ${order.id}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="order-cell">
+
+                        ${formatDate(order.date)}
+
+                        <small>
+                            ${order.time}
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        <span class="status ${statusClass}">
+
+                            ${
+                                order.status === "Success"
+                                ? "✓"
+                                :
+                                order.status === "Pending"
+                                ? "◷"
+                                : "!"
+                            }
+
+                            ${order.status}
+
+                        </span>
+
+                        <div
+                            style="
+                            color:#68738a;
+                            font-size:7px;
+                            margin-top:3px;
+                            "
+                        >
+
+                            ${
+                                order.status === "Success"
+                                ? "Payment Completed"
+                                :
+                                order.status === "Pending"
+                                ? "Payment Processing"
+                                :
+                                "Payment Failed"
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="order-cell">
+
+                        ₹${Number(order.amount).toLocaleString()}
+
+                    </div>
+
+
+                    <div>
+                        ${codeHTML}
+                    </div>
+
+
+                    <div class="action-buttons">
+
+                        ${actionHTML}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* =========================================================
+   ORDER FILTER EVENTS
+========================================================= */
+
+[
+    "orderProductFilter",
+    "orderStatusFilter",
+    "orderPaymentFilter",
+    "dateFilter",
+    "sortFilter"
+]
+.forEach(id => {
+
+    document
+    .getElementById(id)
+    .addEventListener(
+        "change",
+        renderOrders
+    );
+
+});
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function formatDate(date){
+
+    return new Date(date + "T00:00:00")
+        .toLocaleDateString(
+            "en-IN",
+            {
+                day:"2-digit",
+                month:"short",
+                year:"numeric"
+            }
+        );
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+document
+.getElementById("searchInput")
+.addEventListener(
+    "input",
+    function(){
+
+        const value =
+            this.value
+            .trim()
+            .toLowerCase();
+
+        document
+        .querySelectorAll(".product-card")
+        .forEach(card => {
+
+            const text =
+                card.innerText.toLowerCase();
+
+            card.style.display =
+                text.includes(value)
+                ? ""
+                : "none";
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   GAME NAME FOR VALIDATION
+========================================================= */
+
+function getGameName(product){
+
+    if(!product){
+        return "";
+    }
+
+    if(product.category === "bgmi"){
+        return "bgmi";
+    }
+
+    if(product.category === "freefire"){
+        return "freefire";
+    }
+
+    if(product.category === "valorant"){
+        return "valorant";
+    }
+
+    return "";
+}
+
+
+/* =========================================================
+   CHECKOUT
+========================================================= */
+
+function startCheckout(productId){
+
+    if(paymentBusy){
+
+        showToast(
+            "Please wait. Payment is already processing."
+        );
+
+        return;
+    }
+
+    const product =
+        products.find(
+            p => p.id === productId
+        );
+
+    if(!product){
+        return;
+    }
+
+    if(!authUser){
+        currentProduct = product;
+        window.pendingCheckoutProductId = productId;
+        openAuthModal();
+        showToast("Please sign in to continue with your purchase.");
+        return;
+    }
+
+    currentProduct = product;
+
+    currentGameUID = "";
+
+    const isGamingTopup =
+        product.type === "topups";
+
+    const paymentTitle = document.getElementById("paymentModalTitle");
+    if(paymentTitle) paymentTitle.textContent = "Secure Checkout";
+
+
+    document.getElementById(
+        "paymentBody"
+    ).innerHTML = `
+
+        <div class="payment-product">
+
+            <div class="payment-icon">
+                ${product.icon}
+            </div>
+
+            <div>
+
+                <strong>
+                    ${product.name}
+                </strong>
+
+                <small>
+                    ${product.sub}
+                </small>
+
+            </div>
+
+        </div>
+
+
+        ${
+            isGamingTopup
+            ?
+            `
+
+            <div class="uid-section">
+
+                <label
+                    class="uid-label"
+                    for="gameUID"
+                >
+                    ${
+                        getGameName(product)
+                        .toUpperCase()
+                    }
+                    Game UID
+                </label>
+
+                <input
+                    class="uid-input"
+                    id="gameUID"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="Enter your Game UID"
+                >
+
+                <small class="uid-help">
+                    Enter the UID of the account where you want the top-up.
+                </small>
+
+                <div
+                    class="uid-error"
+                    id="uidError"
+                ></div>
+
+            </div>
+
+            `
+            :
+            ""
+        }
+
+
+        <div class="payment-amount">
+
+            <span>Total Amount</span>
+
+            <strong>
+                ₹${product.price.toLocaleString()}
+            </strong>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="detail-row">
+                <span>Payment Method</span>
+                <span>UPI / Card / Wallet</span>
+            </div>
+
+            <div class="detail-row">
+                <span>Delivery</span>
+                <span>Instant Digital Delivery</span>
+            </div>
+
+            <div class="detail-row">
+                <span>Security</span>
+                <span>Encrypted Checkout</span>
+            </div>
+
+        </div>
+
+        <br>
+
+        <button
+            class="modal-action"
+            id="payButton"
+            onclick="createRealOrder()"
+        >
+            Pay ₹${product.price.toLocaleString()}
+        </button>
+
+    `;
+
+    openModal("paymentModal");
+
+}
+
+
+/* =========================================================
+   REAL CREATE ORDER
+========================================================= */
+
+async function createRealOrder(){
+
+    if(!authUser){
+        openAuthModal();
+        showToast("Please sign in before checkout.");
+        return;
+    }
+
+    if(paymentBusy){
+        return;
+    }
+
+    if(!currentProduct){
+
+        showToast(
+            "Product information is missing."
+        );
+
+        return;
+    }
+
+
+    const isGamingTopup =
+        currentProduct.type === "topups";
+
+
+    let gameUID = "";
+
+
+    if(isGamingTopup){
+
+        const uidInput =
+            document.getElementById("gameUID");
+
+        const uidError =
+            document.getElementById("uidError");
+
+        gameUID =
+            uidInput
+            ? uidInput.value.trim()
+            : "";
+
+
+        if(!gameUID){
+
+            if(uidError){
+
+                uidError.textContent =
+                    "Please enter your Game UID.";
+
+                uidError.classList.add("show");
+
+            }
+
+            if(uidInput){
+                uidInput.focus();
+            }
+
+            return;
+        }
+
+
+        if(uidError){
+            uidError.classList.remove("show");
+        }
+
+    }
+
+
+    paymentBusy = true;
+
+    const button =
+        document.getElementById("payButton");
+
+
+    if(button){
+
+        button.disabled = true;
+
+        button.innerHTML =
+            "⏳ Creating Secure Order...";
+
+    }
+
+
+    currentGameUID = gameUID;
+
+    const accessToken = await getAuthAccessToken();
+
+    try{
+
+        /*
+         * First validate the Game UID for gaming top-ups.
+         */
+
+        if(isGamingTopup){
+
+            if(button){
+                button.innerHTML =
+                    "⏳ Validating Game UID...";
+            }
+
+
+            const uidResponse =
+                await fetch(
+                    `${BACKEND_URL}/validate-uid`,
+                    {
+                        method:"POST",
+                        headers:{
+                            "Content-Type":"application/json",
+                            "Authorization":`Bearer ${accessToken}`
+                        },
+                        body:JSON.stringify({
+                            game:getGameName(currentProduct),
+                            game_uid:gameUID
+                        })
+                    }
+                );
+
+
+            let uidData = {};
+
+            try{
+                uidData = await uidResponse.json();
+            }catch(error){
+                uidData = {};
+            }
+
+
+            if(!uidResponse.ok){
+
+                throw new Error(
+                    uidData.message ||
+                    uidData.error ||
+                    "Invalid Game UID."
+                );
+
+            }
+
+
+            if(
+                uidData.success === false ||
+                uidData.valid === false
+            ){
+
+                throw new Error(
+                    uidData.message ||
+                    uidData.error ||
+                    "Game UID could not be verified."
+                );
+
+            }
+
+        }
+
+
+        if(button){
+
+            button.innerHTML =
+                "⏳ Creating Payment Order...";
+
+        }
+
+
+        /*
+         * Real backend order creation.
+         */
+
+        const orderResponse =
+    await fetch(
+        `${BACKEND_URL}/checkout-init`,
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+            },
+
+            body: JSON.stringify({
+
+                product_id:
+                    currentProduct.id,
+
+                game_uid:
+                    gameUID || null
+
+            })
+        }
+    );
+
+
+        let data = {};
+
+        try{
+
+            data =
+                await orderResponse.json();
+
+        }catch(error){
+
+            data = {};
+
+        }
+
+
+        if(!orderResponse.ok){
+
+            throw new Error(
+                data.message ||
+                data.error ||
+                "Unable to create payment order."
+            );
+
+        }
+
+
+        console.log(
+            "Create-order response:",
+            data
+        );
+
+
+        /*
+         * Try to locate the Razorpay order ID
+         * regardless of whether the backend uses
+         * order_id, orderId, id, or nested data.
+         */
+
+        const backendData =
+            data.data || data.order || data;
+
+
+        const razorpayOrderId =
+            backendData.order_id ||
+            backendData.orderId ||
+            backendData.razorpay_order_id ||
+            backendData.razorpayOrderId ||
+            backendData.id ||
+            null;
+
+
+        const razorpayKey =
+            backendData.key_id ||
+            backendData.keyId ||
+            backendData.razorpay_key_id ||
+            backendData.razorpayKeyId ||
+            data.key_id ||
+            data.keyId ||
+            null;
+
+
+        /*
+         * If the backend directly returns a payment
+         * checkout URL, use it.
+         */
+
+        const checkoutUrl =
+            backendData.checkout_url ||
+            backendData.checkoutUrl ||
+            data.checkout_url ||
+            data.checkoutUrl ||
+            null;
+
+
+        if(checkoutUrl){
+
+            paymentBusy = false;
+
+            window.location.href =
+                checkoutUrl;
+
+            return;
+
+        }
+
+
+        /*
+         * Razorpay order returned.
+         */
+
+        if(razorpayOrderId){
+
+            openRazorpayCheckout(
+                razorpayOrderId,
+                razorpayKey,
+                data
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * If backend reports an already-completed order,
+         * handle it without opening Razorpay.
+         */
+
+        if(
+            data.success === true &&
+            (
+                data.status === "Success" ||
+                data.status === "success"
+            )
+        ){
+
+            handleBackendSuccess(data);
+
+            return;
+
+        }
+
+
+        throw new Error(
+            data.message ||
+            data.error ||
+            "Backend created a response, but no payment order was returned."
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Create order error:",
+            error
+        );
+
+
+        paymentBusy = false;
+
+
+        const paymentTitle = document.getElementById("paymentModalTitle");
+        if(paymentTitle) paymentTitle.textContent = "Payment Error";
+
+
+        document.getElementById(
+            "paymentBody"
+        ).innerHTML = `
+
+            <div class="payment-message">
+
+                <div class="payment-icon-large failed">
+
+                    <i data-lucide="x-circle"></i>
+
+                </div>
+
+                <h2>
+                    Unable to Start Payment
+                </h2>
+
+                <p>
+                    ${escapeHTML(
+                        error.message ||
+                        "Something went wrong."
+                    )}
+                </p>
+
+            </div>
+
+
+            <div class="details">
+
+                <div class="detail-row">
+
+                    <span>Backend</span>
+
+                    <span>
+                        ${BACKEND_URL}
+                    </span>
+
+                </div>
+
+                <div class="detail-row">
+
+                    <span>Product</span>
+
+                    <span>
+                        ${escapeHTML(
+                            currentProduct.name
+                        )}
+                    </span>
+
+                </div>
+
+                <div class="detail-row">
+
+                    <span>Status</span>
+
+                    <span style="color:#ff4567">
+                        Payment not started
+                    </span>
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <button
+                class="modal-action"
+                onclick="startCheckout(${currentProduct.id})"
+            >
+                ↻ Try Again
+            </button>
+
+        `;
+
+        lucide.createIcons();
+
+        showToast(
+            error.message ||
+            "Unable to start payment."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   RAZORPAY CHECKOUT
+========================================================= */
+
+function openRazorpayCheckout(
+    razorpayOrderId,
+    razorpayKey,
+    backendData
+){
+
+    if(typeof Razorpay === "undefined"){
+
+        paymentBusy = false;
+
+        showPaymentFailure(
+            "Razorpay Checkout could not be loaded."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Your backend should normally return the
+     * Razorpay key_id. If it does not, the
+     * checkout cannot be opened securely from
+     * the frontend.
+     */
+
+    if(!razorpayKey){
+
+        paymentBusy = false;
+
+        showPaymentFailure(
+            "Payment key was not returned by the backend."
+        );
+
+        return;
+
+    }
+
+
+    currentRazorpayOrder =
+        backendData;
+
+
+    const paymentTitle = document.getElementById("paymentModalTitle");
+    if(paymentTitle) paymentTitle.textContent = "Complete Payment";
+
+
+    document.getElementById(
+        "paymentBody"
+    ).innerHTML = `
+
+        <div class="payment-message">
+
+            <div class="payment-icon-large pending">
+
+                <i data-lucide="credit-card"></i>
+
+            </div>
+
+            <h2>
+                Secure Payment
+            </h2>
+
+            <p>
+                Continue through the secure Razorpay checkout.
+            </p>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="detail-row">
+
+                <span>Product</span>
+
+                <span>
+                    ${escapeHTML(
+                        currentProduct.name
+                    )}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Amount</span>
+
+                <span>
+                    ₹${currentProduct.price.toLocaleString()}
+                </span>
+
+            </div>
+
+            ${
+                currentGameUID
+                ?
+                `
+                <div class="detail-row">
+
+                    <span>Game UID</span>
+
+                    <span>
+                        ${escapeHTML(currentGameUID)}
+                    </span>
+
+                </div>
+                `
+                :
+                ""
+            }
+
+            <div class="detail-row">
+
+                <span>Order ID</span>
+
+                <span>
+                    ${escapeHTML(razorpayOrderId)}
+                </span>
+
+            </div>
+
+        </div>
+
+        <br>
+
+        <button
+            class="modal-action"
+            id="continuePaymentButton"
+        >
+            💳 Continue to Payment
+        </button>
+
+    `;
+
+    lucide.createIcons();
+
+
+    document
+    .getElementById("continuePaymentButton")
+    .addEventListener(
+        "click",
+        function(){
+
+            launchRazorpay(
+                razorpayOrderId,
+                razorpayKey
+            );
+
+        }
+    );
+
+
+    /*
+     * Automatically open Razorpay after the
+     * confirmation screen is rendered.
+     */
+
+    setTimeout(() => {
+
+        launchRazorpay(
+            razorpayOrderId,
+            razorpayKey
+        );
+
+    },300);
+
+}
+
+
+/* =========================================================
+   LAUNCH RAZORPAY
+========================================================= */
+
+function launchRazorpay(
+    razorpayOrderId,
+    razorpayKey
+){
+
+    if(typeof Razorpay === "undefined"){
+
+        showToast(
+            "Razorpay is not available."
+        );
+
+        return;
+
+    }
+
+
+    const options = {
+
+        key:razorpayKey,
+
+        amount:
+            Math.round(
+                currentProduct.price * 100
+            ),
+
+        currency:"INR",
+
+        name:"Tournyx",
+
+        description:
+            `${currentProduct.name} - ${currentProduct.sub}`,
+
+        order_id:
+            razorpayOrderId,
+
+        handler:
+            function(response){
+
+                handleRazorpaySuccess(
+                    response
+                );
+
+            },
+
+        modal:{
+
+            ondismiss:
+                function(){
+
+                    paymentBusy = false;
+
+                    showToast(
+                        "Payment window closed."
+                    );
+
+                }
+
+        },
+
+        prefill:{
+
+            name:"Arjun Sharma"
+
+        },
+
+        theme:{
+
+            color:"#6818dd"
+
+        }
+
+    };
+
+
+    try{
+
+        const razorpay =
+            new Razorpay(options);
+
+
+        razorpay.on(
+            "payment.failed",
+            function(response){
+
+                console.error(
+                    "Razorpay payment failed:",
+                    response
+                );
+
+                paymentFailureFromGateway(
+                    response
+                );
+
+            }
+        );
+
+
+        razorpay.open();
+
+
+    }catch(error){
+
+        console.error(
+            "Razorpay error:",
+            error
+        );
+
+        paymentBusy = false;
+
+        showPaymentFailure(
+            "Could not open the payment gateway."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   RAZORPAY SUCCESS
+========================================================= */
+
+async function handleRazorpaySuccess(response){
+
+    console.log(
+        "Razorpay payment response:",
+        response
+    );
+
+/*
+ * IMPORTANT:
+ *
+ * Payment verification MUST happen on the backend.
+ * The payment is successful only after the backend
+ * verifies the Razorpay signature.
+ */
+    
+    try{
+
+        const accessToken = await getAuthAccessToken();
+
+        const verifyResponse =
+            await fetch(
+                `${BACKEND_URL}/verify-payment`,
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/json",
+                        "Authorization":`Bearer ${accessToken}`
+                    },
+                    body:JSON.stringify({
+
+                        razorpay_order_id:
+                            response.razorpay_order_id,
+
+                        razorpay_payment_id:
+                            response.razorpay_payment_id,
+
+                        razorpay_signature:
+                            response.razorpay_signature,
+
+                        productId:
+                            currentProduct.id,
+
+                        product_id:
+                            currentProduct.id,
+
+                        game:
+                            currentProduct.type === "topups"
+                            ? getGameName(currentProduct)
+                            : null,
+
+                        game_uid:
+                            currentGameUID || null
+
+                    })
+                }
+            );
+
+
+        let verificationData = {};
+
+        try{
+
+            verificationData =
+                await verifyResponse.json();
+
+        }catch(error){
+
+            verificationData = {};
+
+        }
+
+
+        if(verifyResponse.ok){
+
+            if(
+                verificationData.success === false
+            ){
+
+                throw new Error(
+                    verificationData.message ||
+                    "Payment verification failed."
+                );
+
+            }
+
+
+            handleBackendSuccess(
+                verificationData,
+                response
+            );
+
+            return;
+
+        }
+
+        throw new Error(
+            verificationData.message ||
+            verificationData.error ||
+            "Payment verification failed."
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Payment verification:",
+            error
+        );
+        
+        paymentBusy = false;
+
+
+        showPaymentFailure(
+            error.message ||
+            "Payment verification failed."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   BACKEND SUCCESS
+========================================================= */
+
+function handleBackendSuccess(
+    data = {},
+    razorpayResponse = null
+){
+
+    const responseData =
+        data.data ||
+        data.order ||
+        data;
+
+
+    const transactionId =
+        responseData.transaction_id ||
+        responseData.transactionId ||
+        responseData.txn_id ||
+        responseData.txnId ||
+        responseData.id ||
+        (
+            razorpayResponse
+            ?
+            razorpayResponse.razorpay_payment_id
+            :
+            null
+        ) ||
+        (
+            "TXN-" +
+            Date.now()
+            .toString()
+            .slice(-8)
+        );
+
+
+    const giftCode =
+        responseData.gift_code ||
+        responseData.giftCode ||
+        responseData.code ||
+        responseData.voucher_code ||
+        responseData.voucherCode ||
+        null;
+
+
+    const paymentMethod =
+        responseData.payment_method ||
+        responseData.paymentMethod ||
+        "UPI";
+
+
+    const orderStatus =
+        responseData.status ||
+        "Success";
+
+
+    const now =
+        new Date();
+
+
+    const newOrder = {
+
+        id:transactionId,
+
+        product:
+            getOrderProductName(
+                currentProduct
+            ),
+
+        sub:
+            currentProduct.sub,
+
+        icon:
+            currentProduct.icon,
+
+        date:
+            now.toISOString()
+            .slice(0,10),
+
+        time:
+            now.toLocaleTimeString(
+                "en-IN",
+                {
+                    hour:"2-digit",
+                    minute:"2-digit"
+                }
+            ),
+
+        amount:
+            currentProduct.price,
+
+        payment:
+            paymentMethod,
+
+        status:
+            normalizeOrderStatus(
+                orderStatus
+            ),
+
+        code:
+            giftCode,
+
+        game_uid:
+            currentGameUID || null
+
+    };
+
+
+    orders.unshift(
+        newOrder
+    );
+
+    saveOrders();
+
+    renderOrders();
+
+
+    showPaymentSuccess(
+        newOrder
+    );
+
+}
+
+
+/* =========================================================
+   PAYMENT SUCCESS UI
+========================================================= */
+
+function showPaymentSuccess(order){
+
+    const paymentTitle = document.getElementById("paymentModalTitle");
+    if(paymentTitle) paymentTitle.textContent = "Payment Successful";
+
+
+    document.getElementById(
+        "paymentBody"
+    ).innerHTML = `
+
+        <div class="payment-message">
+
+            <div class="payment-icon-large success">
+
+                <i data-lucide="check-circle-2"></i>
+
+            </div>
+
+            <h2>
+                Payment Successful
+            </h2>
+
+            <p>
+                Your payment has been completed successfully.
+            </p>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="detail-row">
+
+                <span>Product</span>
+
+                <span>
+                    ${escapeHTML(
+                        currentProduct.name
+                    )}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Transaction ID</span>
+
+                <span>
+                    ${escapeHTML(order.id)}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Amount</span>
+
+                <span>
+                    ₹${currentProduct.price.toLocaleString()}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Payment</span>
+
+                <span>
+                    ${escapeHTML(order.payment)}
+                </span>
+
+            </div>
+
+            ${
+                order.game_uid
+                ?
+                `
+                <div class="detail-row">
+
+                    <span>Game UID</span>
+
+                    <span>
+                        ${escapeHTML(order.game_uid)}
+                    </span>
+
+                </div>
+                `
+                :
+                ""
+            }
+
+            <div class="detail-row">
+
+                <span>Status</span>
+
+                <span style="color:#00e676">
+                    ${escapeHTML(order.status)}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        ${
+            order.code
+            ?
+            `
+
+            <div class="gift-code">
+
+                <small>
+                    YOUR DIGITAL GIFT CODE
+                </small>
+
+                <strong>
+                    ${escapeHTML(order.code)}
+                </strong>
+
+                <button
+                    class="copy-code"
+                    onclick="copyText('${escapeAttribute(order.code)}')"
+                >
+                    📋 Copy Gift Code
+                </button>
+
+            </div>
+
+            `
+            :
+            `
+
+            <div
+                style="
+                margin-top:14px;
+                padding:12px;
+                text-align:center;
+                border:1px solid rgba(255,255,255,.08);
+                border-radius:8px;
+                color:#788399;
+                font-size:9px;
+                "
+            >
+                Your digital product will be delivered according to the backend order process.
+            </div>
+
+            `
+        }
+
+
+        <br>
+
+        <button
+            class="modal-action"
+            onclick="closeModal('paymentModal');switchTab('orders')"
+        >
+            View Orders History
+        </button>
+
+    `;
+
+
+    lucide.createIcons();
+
+    paymentBusy = false;
+
+
+    try{
+
+        confetti({
+
+            particleCount:120,
+
+            spread:80,
+
+            origin:{
+                y:.65
+            }
+
+        });
+
+    }catch(error){}
+
+}
+
+
+/* =========================================================
+   PAYMENT FAILURE FROM GATEWAY
+========================================================= */
+
+function paymentFailureFromGateway(response){
+
+    paymentBusy = false;
+
+
+    const message =
+        response?.error?.description ||
+        "Payment was not completed.";
+
+
+    showPaymentFailure(
+        message
+    );
+
+}
+
+
+/* =========================================================
+   PAYMENT FAILURE UI
+========================================================= */
+
+function showPaymentFailure(message){
+
+    const paymentTitle = document.getElementById("paymentModalTitle");
+    if(paymentTitle) paymentTitle.textContent = "Payment Failed";
+
+
+    document.getElementById(
+        "paymentBody"
+    ).innerHTML = `
+
+        <div class="payment-message">
+
+            <div class="payment-icon-large failed">
+
+                <i data-lucide="x-circle"></i>
+
+            </div>
+
+            <h2>
+                Payment Failed
+            </h2>
+
+            <p>
+                ${escapeHTML(
+                    message ||
+                    "Something went wrong while processing your payment."
+                )}
+            </p>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="detail-row">
+
+                <span>Product</span>
+
+                <span>
+                    ${escapeHTML(
+                        currentProduct?.name ||
+                        "Unknown"
+                    )}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Status</span>
+
+                <span style="color:#ff4567">
+                    Payment Failed
+                </span>
+
+            </div>
+
+        </div>
+
+        <br>
+
+        <button
+            class="modal-action"
+            onclick="retryCurrentPayment()"
+        >
+            ↻ Retry Payment
+        </button>
+
+    `;
+
+    lucide.createIcons();
+
+}
+
+
+/* =========================================================
+   RETRY CURRENT PAYMENT
+========================================================= */
+
+function retryCurrentPayment(){
+
+    if(!currentProduct){
+        return;
+    }
+
+    startCheckout(
+        currentProduct.id
+    );
+
+}
+
+
+/* =========================================================
+   RETRY ORDER
+========================================================= */
+
+function retryOrder(orderId){
+
+    const order =
+        orders.find(
+            o => o.id === orderId
+        );
+
+    if(!order){
+        return;
+    }
+
+
+    const product =
+        products.find(
+            p => {
+
+                if(
+                    order.product ===
+                    p.name
+                ){
+                    return true;
+                }
+
+                if(
+                    order.product.includes(
+                        "BGMI"
+                    ) &&
+                    p.category === "bgmi"
+                ){
+                    return true;
+                }
+
+                if(
+                    order.product.includes(
+                        "Free Fire"
+                    ) &&
+                    p.category === "freefire"
+                ){
+                    return true;
+                }
+
+                if(
+                    order.product.includes(
+                        "Valorant"
+                    ) &&
+                    p.category === "valorant"
+                ){
+                    return true;
+                }
+
+                return false;
+
+            }
+        );
+
+
+    if(product){
+
+        startCheckout(
+            product.id
+        );
+
+    }else{
+
+        showToast(
+            "Unable to identify this product."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   REVEAL CODE
+========================================================= */
+
+async function fetchVoucherCodeForOrder(orderId){
+    const data = await apiRequest("reveal-voucher", {
+        method: "POST",
+        body: JSON.stringify({ order_id: orderId })
+    });
+    return data.code || data.voucher_code || data.gift_code
+        || (data.data && (data.data.code || data.data.voucher_code || data.data.gift_code))
+        || null;
+}
+
+async function revealGiftCode(orderId){
+
+    const order =
+        orders.find(
+            o => o.id === orderId
+        );
+
+    if(!order){
+        showToast("Order not found.");
+        return;
+    }
+
+    if(order.code){
+        showToast(
+            "Gift code: " + order.code
+        );
+        return;
+    }
+
+    showToast("Fetching your gift code...");
+
+    try{
+
+        const code = await fetchVoucherCodeForOrder(orderId);
+
+        if(!code){
+            showToast("Gift code is not available.");
+            return;
+        }
+
+        order.code = code;
+
+        showToast(
+            "Gift code: " + code
+        );
+
+    }catch(error){
+
+        showToast(
+            error.message || "Could not reveal gift code."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   COPY CODE
+========================================================= */
+
+async function copyGiftCode(orderId){
+
+    const order =
+        orders.find(
+            o => o.id === orderId
+        );
+
+    if(!order){
+        showToast("Order not found.");
+        return;
+    }
+
+    if(!order.code){
+
+        showToast("Fetching your gift code...");
+
+        try{
+
+            const code = await fetchVoucherCodeForOrder(orderId);
+
+            if(!code){
+                showToast("Gift code is not available.");
+                return;
+            }
+
+            order.code = code;
+
+        }catch(error){
+
+            showToast(
+                error.message || "Could not reveal gift code."
+            );
+
+            return;
+
+        }
+
+    }
+
+    copyText(
+        order.code
+    );
+
+}
+
+
+/* =========================================================
+   COPY TEXT
+========================================================= */
+
+function copyText(text){
+
+    if(
+        navigator.clipboard &&
+        window.isSecureContext
+    ){
+
+        navigator.clipboard
+        .writeText(text)
+        .then(() => {
+
+            showToast(
+                "Gift code copied!"
+            );
+
+        })
+        .catch(() => {
+
+            fallbackCopy(text);
+
+        });
+
+    }else{
+
+        fallbackCopy(text);
+
+    }
+
+}
+
+
+function fallbackCopy(text){
+
+    const textarea =
+        document.createElement("textarea");
+
+    textarea.value =
+        text;
+
+    document.body.appendChild(
+        textarea
+    );
+
+    textarea.select();
+
+    try{
+
+        document.execCommand(
+            "copy"
+        );
+
+        showToast(
+            "Gift code copied!"
+        );
+
+    }catch(error){
+
+        showToast(
+            "Copy failed. Please copy manually."
+        );
+
+    }
+
+    textarea.remove();
+
+}
+
+
+/* =========================================================
+   RECEIPT
+========================================================= */
+
+function viewReceipt(orderId){
+
+    const order =
+        orders.find(
+            o => o.id === orderId
+        );
+
+    if(!order){
+        return;
+    }
+
+
+    document.getElementById(
+        "receiptBody"
+    ).innerHTML = `
+
+        <div class="payment-message">
+
+            <div class="payment-icon-large success">
+
+                <i data-lucide="receipt"></i>
+
+            </div>
+
+            <h2>
+                Tournyx Receipt
+            </h2>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="detail-row">
+
+                <span>Product</span>
+
+                <span>
+                    ${escapeHTML(order.product)}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Package</span>
+
+                <span>
+                    ${escapeHTML(order.sub)}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Transaction ID</span>
+
+                <span>
+                    ${escapeHTML(order.id)}
+                </span>
+
+            </div>
+
+            ${
+                order.game_uid
+                ?
+                `
+                <div class="detail-row">
+
+                    <span>Game UID</span>
+
+                    <span>
+                        ${escapeHTML(order.game_uid)}
+                    </span>
+
+                </div>
+                `
+                :
+                ""
+            }
+
+            <div class="detail-row">
+
+                <span>Date</span>
+
+                <span>
+                    ${formatDate(order.date)}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Time</span>
+
+                <span>
+                    ${escapeHTML(order.time)}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Amount</span>
+
+                <span>
+                    ₹${Number(order.amount).toLocaleString()}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Payment Method</span>
+
+                <span>
+                    ${escapeHTML(order.payment)}
+                </span>
+
+            </div>
+
+            <div class="detail-row">
+
+                <span>Status</span>
+
+                <span>
+                    ${escapeHTML(order.status)}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        ${
+            order.code
+            ?
+            `
+
+            <div class="gift-code">
+
+                <small>
+                    DIGITAL VOUCHER
+                </small>
+
+                <strong>
+                    ${escapeHTML(order.code)}
+                </strong>
+
+                <button
+                    class="copy-code"
+                    onclick="copyText('${escapeAttribute(order.code)}')"
+                >
+                    📋 Copy Gift Code
+                </button>
+
+            </div>
+
+            `
+            :
+            `
+
+            <div
+                style="
+                margin-top:14px;
+                padding:12px;
+                text-align:center;
+                border:1px solid rgba(255,255,255,.08);
+                border-radius:8px;
+                color:#788399;
+                font-size:9px;
+                "
+            >
+                Gift code is not available for this transaction.
+            </div>
+
+            `
+        }
+
+    `;
+
+
+    lucide.createIcons();
+
+    openModal(
+        "receiptModal"
+    );
+
+}
+
+
+/* =========================================================
+   MODAL HELPERS
+========================================================= */
+
+function openModal(id){
+
+    document
+    .getElementById(id)
+    .classList.add("show");
+
+}
+
+
+function closeModal(id){
+
+    document
+    .getElementById(id)
+    .classList.remove("show");
+
+}
+
+
+/* =========================================================
+   CLOSE OUTSIDE
+========================================================= */
+
+document
+.querySelectorAll(".modal-overlay")
+.forEach(overlay => {
+
+    overlay.addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target ===
+                overlay
+            ){
+
+                overlay.classList.remove(
+                    "show"
+                );
+
+            }
+
+        }
+    );
+
+});
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    const toastText = document.getElementById("toastText");
+    if(!toast || !toastText) return;
+    toastText.textContent = message;
+
+    toast.classList.add(
+        "show"
+    );
+
+    clearTimeout(
+        toastTimer
+    );
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2500
+        );
+
+}
+
+
+/* =========================================================
+   NAVIGATION / ICON BUTTONS
+========================================================= */
+
+const navButtons = document.querySelectorAll(".nav-btn");
+
+function setActiveNav(button){
+    navButtons.forEach(item => item.classList.remove("active"));
+    if(button) button.classList.add("active");
+}
+
+function showFeatureMessage(title, message){
+    showToast(`${title}: ${message}`);
+}
+
+// Sidebar navigation — every icon/button now has an action.
+navButtons.forEach((button, index) => {
+    button.addEventListener("click", () => {
+        setActiveNav(button);
+
+        switch(index){
+            case 0: // Dashboard
+                switchTab("topups");
+                window.scrollTo({top:0, behavior:"smooth"});
+                break;
+            case 1: // Shop
+                switchTab("topups");
+                window.scrollTo({top:0, behavior:"smooth"});
+                break;
+            case 2: // Orders
+                switchTab("orders");
+                break;
+            case 3: // Wallet
+                showFeatureMessage("MY WALLET", "Balance & transactions are ready");
+                break;
+            case 4: // Membership
+                showFeatureMessage("MEMBERSHIP", "Pro Pass options are available below");
+                document.querySelector(".pro-box")?.scrollIntoView({behavior:"smooth", block:"center"});
+                break;
+            case 5: // Rewards
+                switchTab("topups");
+                showFeatureMessage("REWARDS", "Reward offers are available in Deals");
+                break;
+            case 6: // Deals
+                switchTab("topups");
+                document.querySelector('[data-filter="all"]')?.click();
+                document.getElementById("searchInput")?.focus();
+                showFeatureMessage("DEALS", "Browse the latest offers in the shop");
+                break;
+            case 7: // Support
+                showFeatureMessage("SUPPORT", "Support center opened");
+                break;
+        }
+    });
+});
+
+// Explicit desktop controls retained for compatibility.
+document.getElementById("desktopOrdersBtn")?.addEventListener("click", () => switchTab("orders"));
+document.getElementById("desktopShopBtn")?.addEventListener("click", () => switchTab("topups"));
+
+/* =========================================================
+   TOP BAR ICONS
+========================================================= */
+
+const walletBox = document.querySelector(".wallet");
+const addMoneyButton = document.querySelector(".add-money");
+const topbarBackButton = document.getElementById("topbarBackButton");
+
+topbarBackButton?.addEventListener("click", () => {
+    if(window.history.length > 1) window.history.back();
+    else switchTab("topups");
+});
+
+walletBox?.addEventListener("click", () => {
+    showFeatureMessage("WALLET", "Current balance is shown in the top bar");
+});
+
+addMoneyButton?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    showFeatureMessage("ADD MONEY", "Wallet top-up is ready for checkout integration");
+});
+
+/* =========================================================
+   MOBILE NAVIGATION
+========================================================= */
+
+document.getElementById("mobileOrders")?.addEventListener("click", () => switchTab("orders"));
+document.getElementById("mobileShop")?.addEventListener("click", () => switchTab("topups"));
+
+const mobileNavButtons = document.querySelectorAll(".mobile-nav > button");
+mobileNavButtons.forEach((button, index) => {
+    button.addEventListener("click", () => {
+        if(index === 0){
+            if(window.history.length > 1) window.history.back();
+            else window.scrollTo({top:0, behavior:"smooth"});
+        }else if(index === 1){
+            switchTab("topups");
+        }else if(index === 2){
+            switchTab("topups");
+            document.querySelector(".category-pill")?.scrollIntoView({behavior:"smooth", block:"center"});
+        }else if(index === 3){
+            switchTab("orders");
+        }else if(index === 4){
+            showFeatureMessage("MENU", "Use the sidebar options to navigate Tournyx");
+        }
+    });
+});
+
+// Keep the active state synchronized with the current tab.
+const originalSwitchTab = switchTab;
+switchTab = function(target){
+    originalSwitchTab(target);
+    if(target === "orders") setActiveNav(document.getElementById("desktopOrdersBtn"));
+    else if(target === "topups") setActiveNav(document.getElementById("desktopShopBtn"));
+};
+
+
+/* =========================================================
+   KEYBOARD SEARCH
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.ctrlKey &&
+            event.key === "/"
+        ){
+
+            event.preventDefault();
+
+            document
+            .getElementById(
+                "searchInput"
+            )
+            .focus();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+function escapeAttribute(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /\\/g,
+        "\\\\"
+    )
+    .replace(
+        /'/g,
+        "\\'"
+    );
+
+}
+
+
+/* =========================================================
+   ORDER HELPERS
+========================================================= */
+
+function getOrderProductName(product){
+
+    if(!product){
+        return "Unknown";
+    }
+
+    if(product.category === "bgmi"){
+        return "BGMI";
+    }
+
+    if(product.category === "freefire"){
+        return "Free Fire";
+    }
+
+    if(product.category === "valorant"){
+        return "Valorant";
+    }
+
+    if(product.name.includes("Google Play")){
+        return "Google Play";
+    }
+
+    if(product.name.includes("Netflix")){
+        return "Netflix";
+    }
+
+    if(product.name.includes("Steam")){
+        return "Steam";
+    }
+
+    return product.name;
+
+}
+
+
+function normalizeOrderStatus(status){
+
+    const value =
+        String(status)
+        .toLowerCase();
+
+    if(
+        value === "success" ||
+        value === "successful" ||
+        value === "paid" ||
+        value === "completed"
+    ){
+
+        return "Success";
+
+    }
+
+    if(
+        value === "pending" ||
+        value === "processing"
+    ){
+
+        return "Pending";
+
+    }
+
+    return "Failed";
+
+}
+
+
+/* =========================================================
+   AUTHENTICATION — Supabase Sign In / Sign Up / Persistent Session / Sign Out
+========================================================= */
+let tournyxSupabase=null,authMode="signin",authUser=null;
+try{if(window.supabase?.createClient)tournyxSupabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(error){console.warn("[Tournyx auth] Supabase initialization failed:",error)}
+function authUserShape(user){if(!user)return null;return{id:user.id,email:user.email,displayName:user.user_metadata?.display_name??null,playerId:user.user_metadata?.player_id??null}}
+async function getAuthAccessToken(){if(!tournyxSupabase)throw new Error("Authentication service is unavailable.");const{data,error}=await tournyxSupabase.auth.getSession();if(error)throw error;if(!data?.session?.access_token){authUser=null;updateAuthHeader(null);setPortalAccess(false);throw new Error("Your session has expired. Please sign in again.")}return data.session.access_token}
+function setAuthMessage(message,type=""){const el=document.getElementById("auth-message");if(!el)return;el.style.color=type==="error"?"var(--red)":type==="loading"?"var(--cyan)":"var(--green)";el.textContent=message||""}
+function updateAuthModalUI(){const title=document.getElementById("auth-modal-title"),submit=document.getElementById("auth-submit-btn"),signin=document.getElementById("auth-tab-signin"),signup=document.getElementById("auth-tab-signup"),isSignin=authMode==="signin";if(title)title.textContent=isSignin?"Sign In":"Create Account";if(submit)submit.textContent=isSignin?"SIGN IN":"CREATE ACCOUNT";if(signin)signin.classList.toggle("active",isSignin);if(signup)signup.classList.toggle("active",!isSignin)}
+function setPortalAccess(isAuthenticated){document.body.classList.remove("auth-locked");if(isAuthenticated){closeAuthModal()}}
+function openAuthModal(){authMode="signin";updateAuthModalUI();setAuthMessage("");const email=document.getElementById("auth-email"),password=document.getElementById("auth-password"),toggle=document.getElementById("auth-password-toggle"),overlay=document.getElementById("auth-modal-overlay");if(email)email.value="";if(password)password.value="";if(password)password.type="password";if(toggle){toggle.setAttribute("aria-pressed","false");toggle.setAttribute("aria-label","Show password");toggle.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>'}if(!overlay)return;overlay.classList.add("show");overlay.setAttribute("aria-hidden","false");setTimeout(()=>document.getElementById("auth-email")?.focus(),50)}
+function closeAuthModal(){const overlay=document.getElementById("auth-modal-overlay");if(!overlay)return;if(document.body.classList.contains("auth-locked"))return;overlay.classList.remove("show");overlay.setAttribute("aria-hidden","true")}
+async function signInWithPassword(email,password){if(SUPABASE_PUBLISHABLE_KEY==="PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE")throw new Error("Supabase publishable key is not configured. Open Supabase Project Settings → API Keys and add the current publishable key to this file.");if(!tournyxSupabase)throw new Error("Supabase is not configured. Check the Supabase URL and publishable key.");const{data,error}=await tournyxSupabase.auth.signInWithPassword({email,password});if(error)throw error;authUser=authUserShape(data.user);setGlobalUser(authUser);updateAuthHeader(authUser);setPortalAccess(true); if(window.pendingCheckoutProductId!=null){const pending=window.pendingCheckoutProductId;window.pendingCheckoutProductId=null;setTimeout(()=>startCheckout(pending),80);}return data}
+async function signUp(email,password){if(SUPABASE_PUBLISHABLE_KEY==="PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE")throw new Error("Supabase publishable key is not configured. Open Supabase Project Settings → API Keys and add the current publishable key to this file.");if(!tournyxSupabase)throw new Error("Supabase is not configured. Check the Supabase URL and publishable key.");const{data,error}=await tournyxSupabase.auth.signUp({email,password});if(error)throw error;return data}
+async function signOut(){if(tournyxSupabase){const{error}=await tournyxSupabase.auth.signOut();if(error)throw error}authUser=null;setGlobalUser(null);updateAuthHeader(null);setPortalAccess(false)}
+function updateAuthHeader(user){const signin=document.getElementById("topbar-signin-btn"),account=document.getElementById("topbar-account-info"),avatar=document.getElementById("topbar-avatar"),name=document.getElementById("topbar-user-name"),status=document.getElementById("topbar-user-status");if(!signin||!account)return;if(user){const display=(user.displayName||user.email||"Player").trim();signin.style.display="none";account.style.display="flex";if(avatar)avatar.textContent=display.slice(0,1).toUpperCase();if(name)name.textContent=user.displayName||user.email||"Player";if(status)status.textContent=user.playerId?`Player ID: ${user.playerId}`:"Authenticated"}else{signin.style.display="block";account.style.display="none";if(avatar)avatar.textContent="?";if(name)name.textContent="Guest";if(status)status.textContent="Signed out"}}
+async function handleAuthSubmit(){const emailEl=document.getElementById("auth-email"),passwordEl=document.getElementById("auth-password"),submit=document.getElementById("auth-submit-btn");if(!emailEl||!passwordEl||!submit){setAuthMessage("Login form is unavailable. Please refresh the page.","error");return}const email=emailEl.value.trim(),password=passwordEl.value;if(!email||!password){setAuthMessage("Enter both email and password.","error");return}if(password.length<8){setAuthMessage("Password must be at least 8 characters.","error");return}submit.disabled=true;submit.textContent=authMode==="signin"?"SIGNING IN…":"CREATING ACCOUNT…";setAuthMessage(authMode==="signin"?"Signing in…":"Creating your account…","loading");try{if(authMode==="signin"){await signInWithPassword(email,password);setAuthMessage("Signed in ✓","success");submit.textContent="✓ SIGNED IN";setTimeout(()=>{closeAuthModal();submit.disabled=false;updateAuthModalUI()},500)}else{await signUp(email,password);setAuthMessage("Account created. Check your email to confirm, then sign in.","success");authMode="signin";submit.disabled=false;updateAuthModalUI()}}catch(error){const authErrorMessage = error?.message === "Invalid login credentials"
+      ? "Invalid email or password. If you just created the account, confirm your email first."
+      : (error?.message || "Authentication failed. Please try again.");
+    setAuthMessage(authErrorMessage,"error");submit.disabled=false;updateAuthModalUI()}}
+async function handleTopbarSignOut(){const button=document.getElementById("topbar-signout-btn");if(button)button.disabled=true;try{await signOut()}catch(error){console.warn("[Tournyx auth] sign out:",error);authUser=null;updateAuthHeader(null);setPortalAccess(false)}finally{if(button)button.disabled=false}}
+function initAuthListener(){updateAuthHeader(null);setPortalAccess(false);if(!tournyxSupabase)return;tournyxSupabase.auth.getSession().then(({data})=>{const session=data?.session;if(session){authUser=authUserShape(session.user);setGlobalUser(authUser);updateAuthHeader(authUser);setPortalAccess(true)}else{authUser=null;setGlobalUser(null);updateAuthHeader(null);setPortalAccess(false)}}).catch(error=>{console.warn("[Tournyx auth] session restore failed:",error);authUser=null;updateAuthHeader(null);setPortalAccess(false)});tournyxSupabase.auth.onAuthStateChange((event,session)=>{if(session){authUser=authUserShape(session.user);setGlobalUser(authUser);updateAuthHeader(authUser);setPortalAccess(true)}else{authUser=null;updateAuthHeader(null);setPortalAccess(false)}})}
+function openAccountModal(){if(!authUser){openAuthModal();return}const display=(authUser.displayName||authUser.email||"Player").trim();const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};set("account-avatar-large",display.slice(0,1).toUpperCase());set("account-detail-name",authUser.displayName||"Player");set("account-detail-email",authUser.email||"—");set("account-detail-player-id",authUser.playerId||"Not set");set("account-detail-user-id",authUser.id||"—");set("account-detail-status","Authenticated");set("account-detail-orders",String(Array.isArray(orders)?orders.length:0));const o=document.getElementById("account-modal-overlay");if(o){o.classList.add("show");o.setAttribute("aria-hidden","false")}}function closeAccountModal(){const o=document.getElementById("account-modal-overlay");if(o){o.classList.remove("show");o.setAttribute("aria-hidden","true")}}function initAuthModal(){document.getElementById("topbar-signin-btn")?.addEventListener("click",openAuthModal);document.getElementById("topbar-auth-profile")?.addEventListener("click",e=>{
+    if(e.target.closest("button"))return;
+    if(authUser) openAccountModal();
+    else openAuthModal();
+});document.getElementById("account-modal-close")?.addEventListener("click",closeAccountModal);document.getElementById("account-modal-overlay")?.addEventListener("click",e=>{if(e.target.id==="account-modal-overlay")closeAccountModal()});document.getElementById("account-modal-orders")?.addEventListener("click",()=>{closeAccountModal();document.querySelector('.tab[data-tab="orders"]')?.click()});document.getElementById("account-modal-signout")?.addEventListener("click",async()=>{closeAccountModal();await handleTopbarSignOut()});document.getElementById("topbar-signout-btn")?.addEventListener("click",handleTopbarSignOut);document.getElementById("auth-modal-close")?.addEventListener("click",closeAuthModal);document.getElementById("auth-modal-overlay")?.addEventListener("click",event=>{if(event.target.id==="auth-modal-overlay")closeAuthModal()});document.getElementById("auth-tab-signin")?.addEventListener("click",()=>{authMode="signin";updateAuthModalUI();setAuthMessage("")});document.getElementById("auth-tab-signup")?.addEventListener("click",()=>{authMode="signup";updateAuthModalUI();setAuthMessage("")});document.getElementById("auth-submit-btn")?.addEventListener("click",handleAuthSubmit);document.getElementById("auth-password")?.addEventListener("keydown",event=>{if(event.key==="Enter")handleAuthSubmit()});document.getElementById("auth-password-toggle")?.addEventListener("click",()=>{const input=document.getElementById("auth-password"),toggle=document.getElementById("auth-password-toggle");if(!input||!toggle)return;const nowVisible=input.type==="password";input.type=nowVisible?"text":"password";toggle.setAttribute("aria-pressed",String(nowVisible));toggle.setAttribute("aria-label",nowVisible?"Hide password":"Show password");toggle.innerHTML=nowVisible?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';input.focus()});document.addEventListener("keydown",event=>{if(event.key==="Escape")closeAuthModal()});updateAuthModalUI();initAuthListener()}
+initAuthModal();
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+renderProducts();
+renderOrders();
+lucide.createIcons();
+
+/* Replace demo UI data with live Supabase data when available. */
+(async function initializeLiveData(){
+    try {
+        await loadProductsFromSupabase();
+        if (authUser) await loadOrdersFromSupabase();
+    } catch (error) {
+        console.error("Live data initialization:", error);
+    }
+})();
+
+
+/* =========================================================
+   BACKEND CONNECTION TEST
+========================================================= */
+
+async function testBackendConnection(){
+
+    try{
+
+        const response =
+            await fetch(
+                `${BACKEND_URL}/`
+            );
+
+        /* The backend only defines routes for /validate-uid,
+           /create-order and /verify-payment — there is no handler
+           for the root path "/". A 404 here just means "server is
+           up, root route not defined", which is expected and not
+           an error. Any HTTP response (including 404) proves the
+           backend process is alive and reachable, so treat it as
+           success. Only a network-level failure (server down,
+           wrong port, CORS block, DNS error, etc.) should be
+           reported as "not reachable". */
+        console.log(
+            "✅ Tournyx backend reachable (status " + response.status + ")"
+        );
+
+    }catch(error){
+
+        console.warn(
+            "⚠ Tournyx backend is not reachable yet.",
+            error.message
+        );
+
+    }
+
+}
+
+
+testBackendConnection();
+
+</script>
+
+<script>
+/* =========================================================
+   GLOBAL APPLICATION STATE
+========================================================= */
+window.appState = {
+    cart: [], activeTab: "topups", selectedRegion: null, voucher: null, user: null
+};
+
+function setGlobalUser(user){ window.appState.user = user || null; }
+function setSelectedRegion(region){ window.appState.selectedRegion = region || null; }
+function setActiveTabState(tab){ window.appState.activeTab = tab || "topups"; }
+async function previewVoucher(code, productId){
+    if(!code) { window.appState.voucher = null; return null; }
+    const data = await apiRequest("voucher-preview", { method:"POST", body:JSON.stringify({ code, product_id: productId }) });
+    window.appState.voucher = data.data || data.voucher || data;
+    return window.appState.voucher;
+}
+
+/* =========================================================
+   UNIVERSAL SHOPPING CART — added to this uploaded Tournyx file
+========================================================= */
+(function(){
+    const CART_KEY="tournyx_shop_cart_v1";
+    let cart=[];
+    try{ const saved=JSON.parse(localStorage.getItem(CART_KEY)||"[]"); if(Array.isArray(saved)) cart=saved; }catch(e){ cart=[]; }
+
+    function save(){ try{localStorage.setItem(CART_KEY,JSON.stringify(cart));}catch(e){} }
+    function productById(id){
+        const list = (typeof products !== "undefined" && Array.isArray(products)) ? products : (window.products || []);
+        return list.find(p=>Number(p.id)===Number(id));
+    }
+    function money(v){ return "₹"+Number(v||0).toLocaleString("en-IN"); }
+    function toast(msg){
+        const el=document.getElementById("cartToast"); if(!el)return;
+        el.textContent=msg; el.classList.add("show"); clearTimeout(window.__cartToastTimer);
+        window.__cartToastTimer=setTimeout(()=>el.classList.remove("show"),1800);
+    }
+    function totals(){
+        return cart.reduce((a,x)=>{const p=productById(x.id);if(p){a.items+=x.qty;a.subtotal+=Number(p.price||0)*x.qty;}return a;},{items:0,subtotal:0});
+    }
+    function updateBadge(){
+        const t=totals();
+        const b=document.getElementById("cartCount"), h=document.getElementById("cartHeaderCount"), it=document.getElementById("cartItemsTotal"), sub=document.getElementById("cartSubtotal"), total=document.getElementById("cartGrandTotal");
+        if(b)b.textContent=t.items>99?"99+":String(t.items);
+        if(h)h.textContent=t.items+" "+(t.items===1?"ITEM":"ITEMS");
+        if(it)it.textContent=t.items;
+        if(sub)sub.textContent=money(t.subtotal);
+        if(total)total.textContent=money(t.subtotal);
+    }
+    function render(){
+        const box=document.getElementById("cartItems"); if(!box)return;
+        if(!cart.length){box.innerHTML='<div class="cart-empty"><strong>YOUR CART IS EMPTY</strong>Add gaming top-ups, gift cards or game keys to continue.</div>';updateBadge();return;}
+        box.innerHTML=cart.map((x,i)=>{const p=productById(x.id);if(!p)return "";return `<div class="cart-item">
+            <div class="cart-item-icon" aria-hidden="true">${productIconMarkup(p)}</div>
+            <div><div class="cart-item-name">${escapeHtmlSafe(p.name)}</div><div class="cart-item-sub">${escapeHtmlSafe(p.sub||"")}</div>
+                <div class="cart-qty"><button type="button" data-cart-minus="${p.id}">−</button><span>${x.qty}</span><button type="button" data-cart-plus="${p.id}">+</button></div>
+                <button class="cart-remove" type="button" data-cart-remove="${p.id}">REMOVE</button>
+            </div><div class="cart-item-price">${money(Number(p.price||0)*x.qty)}</div>
+        </div>`;}).join("");
+        updateBadge();
+    }
+    function escapeHtmlSafe(v){return String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));}
+    function add(id){
+        const p=productById(id); if(!p){toast("Product unavailable");return;}
+        if(typeof authUser!=="undefined" && !authUser){ if(typeof openAuthModal==="function")openAuthModal(); toast("Please sign in first"); return; }
+        const found=cart.find(x=>Number(x.id)===Number(id));
+        if(found)found.qty+=1; else cart.push({id:Number(id),qty:1});
+        save();render();toast(p.name+" added to cart ✓");
+        const btn=document.querySelector(`[data-add-cart="${id}"]`); if(btn){btn.classList.add("added");btn.textContent="✓ ADDED";setTimeout(()=>{if(btn.isConnected){btn.classList.remove("added");btn.textContent="🛒 ADD TO CART";}},900);}
+    }
+    function change(id,delta){const x=cart.find(a=>Number(a.id)===Number(id));if(!x)return;x.qty=Math.max(0,x.qty+delta);cart=cart.filter(a=>a.qty>0);save();render();}
+    function remove(id){cart=cart.filter(x=>Number(x.id)!==Number(id));save();render();toast("Item removed");}
+    function open(){const o=document.getElementById("cartOverlay");if(!o)return;o.classList.add("show");o.setAttribute("aria-hidden","false");render();}
+    function close(){const o=document.getElementById("cartOverlay");if(!o)return;o.classList.remove("show");o.setAttribute("aria-hidden","true");}
+    function checkout(){
+        if(!cart.length){toast("Your cart is empty");return;}
+        const first=cart[0], p=productById(first.id); if(!p){cart.shift();save();render();return;}
+        close();
+        if(typeof startCheckout==="function"){
+            if(first.qty>1) toast("Checkout will process this item first. Quantity: "+first.qty);
+            window.__tournyxCartCheckoutId=Number(p.id);
+            startCheckout(p.id);
+        }else toast("Checkout is not available");
+    }
+    window.tournyxCart={add,change,remove,open,close,checkout,render,getItems:()=>[...cart]};
+    document.addEventListener("click",function(e){
+        const addBtn=e.target.closest("[data-add-cart]"); if(addBtn){e.preventDefault();e.stopPropagation();add(Number(addBtn.dataset.addCart));return;}
+        const plus=e.target.closest("[data-cart-plus]"); if(plus){change(Number(plus.dataset.cartPlus),1);return;}
+        const minus=e.target.closest("[data-cart-minus]"); if(minus){change(Number(minus.dataset.cartMinus),-1);return;}
+        const rem=e.target.closest("[data-cart-remove]"); if(rem){remove(Number(rem.dataset.cartRemove));return;}
+        if(e.target.closest("#cartTopButton")){open();return;}
+        if(e.target.closest("#cartClose")||e.target.id==="cartOverlay"){close();return;}
+        if(e.target.closest("#cartContinueShopping")){close();return;}
+        if(e.target.closest("#cartClearButton")){cart=[];save();render();toast("Cart cleared");return;}
+        if(e.target.closest("#cartCheckoutButton")){checkout();return;}
+    },true);
+    document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+    updateBadge();
+    setTimeout(render,0);
+
+    /* After a verified payment, remove the checked-out cart item. */
+    if(typeof window.handleRazorpaySuccess==="function"){
+        const original=window.handleRazorpaySuccess;
+        window.handleRazorpaySuccess=async function(response){
+            const beforeId=window.__tournyxCartCheckoutId;
+            await original(response);
+            if(beforeId){cart=cart.filter(x=>Number(x.id)!==Number(beforeId));save();render();window.__tournyxCartCheckoutId=null;}
+        };
+    }
+})();
+</script>
+
+<script>
+/* =========================================================
+   TOURNYX SIDEBAR — ROBUST NAVIGATION FIX
+   Uses event delegation so every sidebar button works even
+   when earlier optional handlers fail.
+========================================================= */
+(function(){
+  "use strict";
+
+  const navMap = ["dashboard","shop","orders","wallet","membership","rewards","deals","support"];
+
+  function getButtons(){
+    return Array.from(document.querySelectorAll(".sidebar .nav-btn"));
+  }
+
+  function setActive(btn){
+    getButtons().forEach(b => b.classList.remove("active"));
+    if(btn) btn.classList.add("active");
+  }
+
+  function safeSwitch(tab){
+    try{
+      if(typeof switchTab === "function"){
+        switchTab(tab);
+        return true;
+      }
+    }catch(err){ console.warn("[Tournyx nav] switchTab error", err); }
+    return false;
+  }
+
+  function closeNavFeature(){
+    const old=document.getElementById("tournyx-nav-feature");
+    if(old) old.remove();
+  }
+
+  function openFeature(title, icon, bodyHtml){
+    closeNavFeature();
+    const overlay=document.createElement("div");
+    overlay.id="tournyx-nav-feature";
+    overlay.innerHTML=`
+      <div class="tx-nav-feature-card" role="dialog" aria-modal="true" aria-label="${title}">
+        <button class="tx-nav-feature-close" type="button" aria-label="Close">×</button>
+        <div class="tx-nav-feature-icon">${icon}</div>
+        <div class="tx-nav-feature-kicker">TOURNYX</div>
+        <h2>${title}</h2>
+        <div class="tx-nav-feature-body">${bodyHtml}</div>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener("click", function(e){
+      if(e.target===overlay || e.target.closest(".tx-nav-feature-close")) closeNavFeature();
+    });
+    document.addEventListener("keydown", function esc(e){
+      if(e.key==="Escape"){
+        closeNavFeature();
+        document.removeEventListener("keydown",esc);
+      }
+    }, {once:false});
+  }
+
+  function showWallet(){
+    const balance=document.querySelector(".wallet strong")?.textContent || "₹0";
+    openFeature("MY WALLET","▣",`
+      <div class="tx-feature-stat"><span>AVAILABLE BALANCE</span><strong>${balance}</strong></div>
+      <div class="tx-feature-row">View your wallet balance and payment activity here.</div>
+      <button type="button" class="tx-feature-action" data-feature-action="add-money">ADD MONEY</button>
+    `);
+  }
+
+  function showMembership(){
+    openFeature("MEMBERSHIP","◇",`
+      <div class="tx-feature-stat"><span>TOURNYX PRO PASS</span><strong>ACTIVE OPTIONS</strong></div>
+      <div class="tx-feature-list"><div>✦ Exclusive discounts</div><div>✦ Priority support</div><div>✦ Early access deals</div></div>
+      <button type="button" class="tx-feature-action" data-feature-action="upgrade">UPGRADE NOW</button>
+    `);
+  }
+
+  function showRewards(){
+    openFeature("REWARDS","☆",`
+      <div class="tx-feature-stat"><span>REWARD CENTER</span><strong>COMING FROM YOUR PURCHASES</strong></div>
+      <div class="tx-feature-row">Earn and view Tournyx rewards from eligible purchases and offers.</div>
+      <button type="button" class="tx-feature-action" data-feature-action="deals">VIEW DEALS</button>
+    `);
+  }
+
+  function showDeals(){
+    closeNavFeature();
+    setActive(document.querySelector('.sidebar .nav-btn:nth-child(7)'));
+    safeSwitch("topups");
+    setTimeout(()=>{
+      document.querySelector('[data-filter="all"]')?.click();
+      document.getElementById("searchInput")?.focus();
+    },300);
+  }
+
+  function showSupport(){
+    openFeature("SUPPORT","◉",`
+      <div class="tx-feature-stat"><span>SUPPORT CENTER</span><strong>24 / 7</strong></div>
+      <div class="tx-feature-row">Need help with an order, payment, game top-up, or account?</div>
+      <div class="tx-feature-list"><div>▸ Check your My Orders section</div><div>▸ Verify payment status</div><div>▸ Contact the Tournyx support team</div></div>
+      <button type="button" class="tx-feature-action" data-feature-action="orders">OPEN MY ORDERS</button>
+    `);
+  }
+
+  function handleNav(btn, index){
+    const key=navMap[index];
+    if(!key) return;
+    setActive(btn);
+    closeNavFeature();
+
+    switch(key){
+      case "dashboard":
+      case "shop":
+        safeSwitch("topups");
+        window.scrollTo({top:0,behavior:"smooth"});
+        break;
+      case "orders":
+        safeSwitch("orders");
+        window.scrollTo({top:0,behavior:"smooth"});
+        break;
+      case "wallet": showWallet(); break;
+      case "membership": showMembership(); break;
+      case "rewards": showRewards(); break;
+      case "deals": showDeals(); break;
+      case "support": showSupport(); break;
+    }
+  }
+
+  // Assign stable data attributes.
+  getButtons().forEach((btn,i)=>{
+    btn.dataset.tournyxNav=navMap[i]||"";
+  });
+
+  // Capture phase prevents broken/duplicate older listeners from blocking navigation.
+  document.addEventListener("click", function(e){
+    const btn=e.target.closest?.(".sidebar .nav-btn");
+    if(!btn) return;
+    const index=getButtons().indexOf(btn);
+    if(index<0) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    handleNav(btn,index);
+  }, true);
+
+  document.addEventListener("click", function(e){
+    const action=e.target.closest?.("[data-feature-action]");
+    if(!action) return;
+    const type=action.dataset.featureAction;
+    if(type==="orders"){
+      closeNavFeature();
+      const btn=document.querySelector('.sidebar .nav-btn[data-tournyx-nav="orders"]');
+      handleNav(btn,2);
+    }else if(type==="deals"){
+      closeNavFeature();
+      const btn=document.querySelector('.sidebar .nav-btn[data-tournyx-nav="deals"]');
+      handleNav(btn,6);
+    }else if(type==="add-money"){
+      closeNavFeature();
+      document.querySelector(".add-money")?.click();
+    }else if(type==="upgrade"){
+      closeNavFeature();
+      document.querySelector(".pro-btn")?.click();
+    }
+  });
+
+  // Add styles once.
+  const style=document.createElement("style");
+  style.textContent=`
+    #tournyx-nav-feature{position:fixed;inset:0;z-index:12000;display:grid;place-items:center;padding:20px;background:rgba(2,5,10,.78);backdrop-filter:blur(7px)}
+    .tx-nav-feature-card{position:relative;width:min(470px,94vw);max-height:86vh;overflow:auto;padding:28px;border:1px solid rgba(0,217,255,.38);border-radius:16px;background:linear-gradient(160deg,#0d1220,#070a12 70%);box-shadow:0 0 45px rgba(0,217,255,.12),0 25px 80px rgba(0,0,0,.65);color:#fff}
+    .tx-nav-feature-close{position:absolute;right:14px;top:10px;border:0;background:transparent;color:#8e98ad;font-size:28px;cursor:pointer}.tx-nav-feature-close:hover{color:#fff}
+    .tx-nav-feature-icon{width:52px;height:52px;display:grid;place-items:center;border-radius:12px;border:1px solid rgba(157,53,255,.45);background:rgba(157,53,255,.12);font-size:24px;margin-bottom:12px}
+    .tx-nav-feature-kicker{font-size:8px;letter-spacing:3px;color:#00d9ff;font-weight:800}.tx-nav-feature-card h2{margin:5px 0 20px;font-family:Orbitron,sans-serif;font-size:20px}.tx-nav-feature-body{font-family:Rajdhani,sans-serif;font-size:13px;color:#aeb7c9;line-height:1.6}
+    .tx-feature-stat{display:flex;justify-content:space-between;gap:15px;padding:15px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.025);margin-bottom:12px}.tx-feature-stat span{font-size:9px;color:#778197;letter-spacing:1px}.tx-feature-stat strong{color:#00d9ff}.tx-feature-row,.tx-feature-list{padding:14px;border:1px solid rgba(255,255,255,.07);border-radius:10px;margin-bottom:12px}.tx-feature-list div{margin:7px 0;color:#c5ccda}.tx-feature-action{width:100%;padding:12px;border:1px solid #813cff;border-radius:8px;background:linear-gradient(90deg,#6316d6,#087cd7);color:#fff;font-weight:800;font-size:10px;letter-spacing:1px;cursor:pointer}.tx-feature-action:hover{box-shadow:0 0 20px rgba(0,217,255,.18)}
+  `;
+  document.head.appendChild(style);
+})();
+</script>
+</body>
+</html>
